@@ -1,0 +1,147 @@
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; }
+button, input, select, textarea { font: inherit; }
+.spec-header { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding-block: 2.25rem; border-bottom: 1px solid var(--office-rule); }
+.spec-home { text-decoration: none; }
+.spec-edition { display: grid; gap: 0.35rem; text-align: right; font-family: var(--office-font-label); font-size: 0.8125rem; line-height: 1.4; text-transform: uppercase; letter-spacing: 0.05em; }
+.spec-hero { display: grid; grid-template-columns: 1.35fr 0.85fr; align-items: center; gap: 5%; padding-block: 5.5rem 5rem; }
+.spec-hero__label { margin-bottom: 1.75rem !important; color: var(--office-color-wax); }
+.spec-hero h1 em { font-weight: 400; }
+.spec-hero__intro { max-width: 31rem; margin-top: 2rem !important; }
+.spec-hero__meta { margin-top: 2.25rem !important; }
+.spec-hero__object { padding-top: 1.5rem; }
+.spec-file { display: flex; flex-direction: column; min-height: 28rem; gap: 2rem; padding: 2rem; background: var(--office-color-red); color: var(--office-color-ink); border: 1px solid var(--office-color-ink); box-shadow: 0.6rem 0.6rem 0 var(--office-color-ink); }
+.spec-file .office-eyebrow { font-size: 0.75rem; letter-spacing: 0.04em; }
+.spec-file .office-signature { font-size: 1.625rem; align-self: center; }
+.spec-file__rule { border-top: 1px solid currentColor; }
+.spec-file .office-quote { text-align: center; margin-block: auto; font-size: clamp(2rem, 3vw, 3.15rem); }
+.spec-file__footer { display: flex; justify-content: space-between; gap: 0.5rem; font-family: var(--office-font-label); font-size: 0.75rem; text-transform: uppercase; }
+.spec-caption { font-family: var(--office-font-label); font-size: 0.8125rem; line-height: 1.5; color: var(--office-text-muted); margin-top: 1.25rem !important; }
+.spec-hero__object > .spec-caption { text-align: right; padding-right: 0.5rem; }
+.spec-nav { display: grid; grid-template-columns: repeat(6, 1fr); border-top: 1px solid var(--office-rule); border-bottom: 1px solid var(--office-rule); }
+.spec-nav a { display: flex; gap: 0.65rem; align-items: center; justify-content: center; min-height: 4rem; padding: 0.75rem 0.25rem; text-decoration: none; font-family: var(--office-font-label); font-size: 0.875rem; }
+.spec-nav a span { color: var(--office-text-muted); font-size: 0.75rem; }
+.spec-nav a:hover { color: var(--office-color-wax); text-decoration: underline; }
+.spec-section { padding-block: var(--office-section-space); border-bottom: 1px solid var(--office-rule); scroll-margin-top: 1.5rem; }
+.spec-section__title { display: flex; align-items: baseline; gap: 1.75rem; margin-bottom: 3rem; }
+.spec-section__title > .office-eyebrow { flex: none; color: var(--office-text-muted); }
+.spec-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+.spec-principles { gap: 4.5rem; }
+.spec-principle-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2.5rem; margin-top: 3.5rem; }
+.spec-principle-grid > div { border-top: 1px solid var(--office-rule); padding-top: 1.5rem; }
+.spec-principle-grid h3 { font-family: var(--office-font-display); font-size: 2rem; font-weight: 500; margin-block: 1rem 0.5rem; }
+.spec-principle-grid p:last-child { font-size: 1.125rem; }
+.spec-signature-panel { margin-top: 3.5rem; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 3rem; padding: 2rem; border: 1px solid var(--office-rule); }
+.spec-signature-panel > .office-signature { font-size: clamp(1.5rem, 2.5vw, 2rem); justify-self: center; }
+.spec-signature-panel p:last-child { font-size: 1.0625rem; margin-top: 0.5rem; }
+.spec-type-row { display: grid; grid-template-columns: 1fr 1.65fr; gap: 3rem; padding-block: 2rem; border-top: 1px solid var(--office-rule); align-items: center; }
+.spec-type-row > div:first-child > p:last-child { margin-top: 0.75rem; font-size: 1.0625rem; }
+.spec-type-display { font-family: var(--office-font-display); font-size: clamp(2.5rem, 4.5vw, 4rem); line-height: 1.07; }
+.spec-type-mono { font-family: var(--office-font-label); font-size: clamp(1rem, 2vw, 1.5rem); line-height: 1.6; }
+.spec-type-mono span { font-size: 1rem; }
+.spec-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; padding-block: 2rem; font-size: 1.125rem; }
+.spec-notes strong { font-weight: 500; }
+.spec-scale { display: grid; grid-template-columns: repeat(7,1fr); gap: 0.5rem; padding-block: 1.5rem; border-block: 1px solid var(--office-rule); }
+.spec-scale > div { display: grid; gap: 0.5rem; }
+.spec-scale span { font-family: var(--office-font-display); font-size: 2rem; }
+.spec-scale small { font-family: var(--office-font-label); font-size: 0.75rem; }
+.spec-intro { margin-bottom: 2.5rem !important; }
+.spec-swatches { display: grid; grid-template-columns: repeat(6,1fr); gap: 0.75rem; }
+.spec-swatch { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; min-height: 11rem; padding: 1rem; font-family: var(--office-font-label); font-size: 0.875rem; border: 1px solid var(--office-rule); }
+.spec-swatch code { font: inherit; font-size: 0.75rem; }
+.spec-swatches > div > p { font-size: 1.0625rem; line-height: 1.3; margin-top: 0.75rem; }
+.spec-swatch--paper { background: var(--office-color-paper); }
+.spec-swatch--ink { background: var(--office-color-ink); color: var(--office-color-paper); border-color: transparent; }
+.spec-swatch--wax { background: var(--office-color-wax); color: var(--office-color-paper); border-color: transparent; }
+.spec-swatch--red { background: var(--office-color-red); border-color: transparent; }
+.spec-swatch--olive { background: var(--office-color-olive); border-color: transparent; }
+.spec-swatch--blue { background: var(--office-color-blue); border-color: transparent; }
+.spec-themes { margin-top: 3.5rem; gap: 0; border: 1px solid var(--office-rule); }
+.spec-theme { padding: 2.5rem; display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+.spec-theme h3 { font-family: var(--office-font-display); font-size: 2.75rem; font-weight: 400; line-height: 1.05; }
+.spec-theme p:not(.office-eyebrow) { font-size: 1.125rem; }
+.spec-theme button { margin-top: auto; }
+.spec-component-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 2.5rem; margin-block: 2rem; }
+.spec-component-heading > button { flex-shrink: 0; }
+.spec-component-heading p { font-size: 1.125rem; }
+.spec-component-lab { border: 1px solid var(--office-rule); padding: 2.5rem; }
+.spec-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+.spec-form-grid { margin-top: 3rem; }
+.spec-form-grid > div > .office-eyebrow { margin-bottom: 1.5rem; }
+.spec-form-grid > .office-stack { align-content: start; gap: 1.5rem; }
+.spec-form-grid .office-stack > .office-eyebrow { margin-bottom: 0; }
+.spec-story-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+.spec-story-grid .office-card { min-height: 23rem; display: flex; flex-direction: column; gap: 2.5rem; justify-content: space-between; padding: 1.75rem; }
+.spec-story-grid .office-quote { font-size: clamp(2rem, 2.6vw, 2.75rem); }
+.spec-story-grid .office-signature { font-size: 0.875rem; }
+.spec-layout-rule { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--office-rule); }
+.spec-layout-rule > p:not(.office-eyebrow) { font-size: 1.0625rem; margin-top: 0.75rem; }
+.spec-copy-examples { display: grid; gap: 1.5rem; }
+.spec-copy-examples > div { border-left: 1px solid var(--office-color-control); padding-left: 1.5rem; }
+.spec-copy-examples .office-eyebrow { color: var(--office-text-muted); margin-bottom: 0.5rem; }
+#voz .office-lead + p { margin-top: 2rem; font-size: 1.125rem; }
+.spec-reference-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+.spec-reference-grid a { display: grid; gap: 0.75rem; font-family: var(--office-font-label); font-size: 0.875rem; }
+.spec-reference-grid img { width: 100%; height: 15rem; object-fit: contain; background: var(--office-color-paper-raised); border: 1px solid var(--office-rule); }
+.spec-reference-links { display: flex; flex-wrap: wrap; column-gap: 1.5rem; row-gap: 0.5rem; margin-top: 2rem; }
+.spec-reference-links a { display: inline-flex; align-items: center; min-height: 2.75rem; font-family: var(--office-font-label); font-size: 0.875rem; }
+.spec-footer { display: flex; justify-content: space-between; gap: 2rem; padding-block: 3rem; }
+.spec-footer > div { text-align: right; }
+.spec-footer p { font-size: 1.0625rem; margin-top: 0.5rem !important; }
+.spec-footer a { font-family: var(--office-font-label); font-size: 0.8125rem; }
+.spec-skip { position: absolute; z-index: 100; top: 1rem; left: 1rem; padding: 1rem; background: var(--office-color-ink); color: var(--office-color-paper) !important; transform: translateY(-200%); }
+.spec-skip:focus { transform: translateY(0); }
+@media (max-width: 960px) {
+  .spec-hero { gap: 2rem; }
+  .spec-file { padding: 1.5rem; min-height: 25rem; }
+  .spec-file .office-signature { font-size: 1.25rem; }
+  .spec-two-col, .spec-principles { gap: 2rem; }
+  .spec-component-heading { display: grid; gap: 1rem; justify-items: start; }
+  .spec-swatches { grid-template-columns: repeat(3,1fr); row-gap: 1.5rem; }
+  .spec-component-lab { padding: 1.5rem; }
+  .spec-theme { padding: 1.5rem; }
+  .spec-story-grid { grid-template-columns: 1fr; }
+  .spec-story-grid .office-card { min-height: 17rem; }
+  .spec-story-grid .office-quote { max-width: 26ch; font-size: 2.5rem; }
+}
+@media (max-width: 680px) {
+  .spec-header { align-items: flex-start; padding-block: 1.5rem; gap: 1rem; }
+  .spec-edition { font-size: 0.625rem; max-width: 7.5rem; }
+  .spec-header .office-signature { font-size: 0.875rem; }
+  .spec-hero { grid-template-columns: 1fr; padding-block: 3rem; gap: 2rem; }
+  .spec-hero__intro { margin-top: 1.5rem !important; }
+  .spec-hero__meta { font-size: 0.75rem; }
+  .spec-hero__object { width: min(100% - 0.5rem, 24rem); margin-inline: auto; }
+  .spec-file { min-height: 25rem; gap: 1.75rem; }
+  .spec-file .office-quote { font-size: 2.75rem; }
+  .spec-nav { grid-template-columns: repeat(3,1fr); }
+  .spec-nav a { min-height: 3.5rem; font-size: 0.8125rem; }
+  .spec-section__title { gap: 0.75rem; margin-bottom: 2rem; }
+  .spec-section__title > .office-eyebrow { font-size: 0.75rem; }
+  .spec-two-col, .spec-principle-grid, .spec-signature-panel, .spec-type-row, .spec-notes { grid-template-columns: 1fr; gap: 1.75rem; }
+  .spec-principle-grid { margin-top: 2rem; }
+  .spec-signature-panel { padding: 1.5rem; }
+  .spec-type-row { padding-block: 1.5rem; }
+  .spec-scale { grid-template-columns: repeat(4,1fr); gap: 1.5rem 0.5rem; }
+  .spec-scale span { font-size: 1.75rem; }
+  .spec-scale small { font-size: 0.6875rem; }
+  .spec-swatches { grid-template-columns: repeat(2,1fr); }
+  .spec-themes { gap: 0; }
+  .spec-theme { padding: 1.5rem; }
+  .spec-component-lab { padding: 1rem; }
+  .spec-buttons > button { width: 100%; }
+  .spec-reference-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .spec-reference-grid img { height: auto; max-height: 24rem; }
+  .spec-footer { flex-direction: column; gap: 2rem; }
+  .spec-footer > div { text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print {
+  html, body { min-width: 0; background: white; }
+  .spec-nav, .spec-skip, .spec-component-heading > button, .spec-reference-links, .spec-footer a { display: none; }
+  .spec-section { padding-block: 2rem; break-inside: auto; }
+  .spec-section__title { break-after: avoid; }
+  .office-card, .spec-type-row, .spec-theme { break-inside: avoid; }
+  .spec-hero { padding-block: 2rem; }
+  .office-surface { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}

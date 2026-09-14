@@ -1,0 +1,104 @@
+/* La Oficina · v1.0 · Source of truth for all new web interfaces. */
+:root {
+  --office-color-paper: #f3f0e7;
+  --office-color-paper-raised: #fbf9f2;
+  --office-color-ink: #1c1c18;
+  --office-color-night: #11120f;
+  --office-color-night-raised: #1d1e19;
+  --office-color-muted: #656156;
+  --office-color-rule: #c7c2b5;
+  --office-color-control: #837d6f;
+  --office-color-wax: #71312f;
+  --office-color-wax-hover: #552422;
+  --office-color-red: #d2645b;
+  --office-color-olive: #818b59;
+  --office-color-blue: #b0c8cc;
+  --office-color-clay: #b57b64;
+  --office-color-success: #46582e;
+  --office-color-error: #912f32;
+  --office-color-night-muted: #c0bcaf;
+  --office-color-night-rule: #4c4d44;
+  --office-color-night-control: #8d8e7e;
+  --office-color-night-success: #bdce9b;
+  --office-color-night-error: #ffb1a7;
+  --office-color-night-action: #edb4a2;
+  --office-color-night-action-hover: #f3cbbb;
+
+  /* Legacy landing aliases. Keep their values until the landing is redesigned. */
+  --office-legacy-ink-rgb: 7 6 5;
+  --office-legacy-soot-rgb: 17 16 14;
+  --office-legacy-ivory-rgb: 245 234 212;
+  --office-legacy-parchment-rgb: 217 201 166;
+  --office-legacy-wax-rgb: 95 22 24;
+  --office-legacy-ink: rgb(var(--office-legacy-ink-rgb));
+
+  --office-font-display: "Cormorant Garamond", Georgia, serif;
+  --office-font-body: "EB Garamond", Georgia, serif;
+  --office-font-label: "Inconsolata", "Courier New", monospace;
+  --office-text-caption: 0.8125rem;
+  --office-text-label: 0.875rem;
+  --office-text-small: 1.0625rem;
+  --office-text-body: 1.25rem;
+  --office-text-lead: clamp(1.375rem, 1.1rem + 0.75vw, 1.75rem);
+  --office-text-heading: clamp(2.25rem, 1.5rem + 2.5vw, 4rem);
+  --office-text-display: clamp(3rem, 1.5rem + 5vw, 6.75rem);
+  --office-leading-body: 1.5;
+  --office-leading-display: 1.04;
+  --office-tracking-label: 0.08em;
+
+  --office-space-1: 0.25rem;
+  --office-space-2: 0.5rem;
+  --office-space-3: 0.75rem;
+  --office-space-4: 1rem;
+  --office-space-6: 1.5rem;
+  --office-space-8: 2rem;
+  --office-space-12: 3rem;
+  --office-space-16: 4rem;
+  --office-space-24: 6rem;
+  --office-space-32: 8rem;
+  --office-gutter: clamp(1.25rem, 4vw, 4rem);
+  --office-section-space: clamp(3.5rem, 7vw, 7rem);
+  --office-width-page: 76rem;
+  --office-width-reading: 38rem;
+  --office-width-form: 32rem;
+  --office-control-height: 3rem;
+  --office-radius: 0;
+  --office-rule-width: 1px;
+  --office-focus-width: 2px;
+  --office-focus-offset: 4px;
+  --office-duration: 160ms;
+  --office-ease: ease-out;
+}
+
+:root,
+[data-office-theme="paper"] {
+  color-scheme: light;
+  --office-surface: var(--office-color-paper);
+  --office-surface-raised: var(--office-color-paper-raised);
+  --office-text: var(--office-color-ink);
+  --office-text-muted: var(--office-color-muted);
+  --office-rule: var(--office-color-rule);
+  --office-control-border: var(--office-color-control);
+  --office-action: var(--office-color-wax);
+  --office-action-hover: var(--office-color-wax-hover);
+  --office-on-action: var(--office-color-paper-raised);
+  --office-focus: var(--office-color-wax);
+  --office-success: var(--office-color-success);
+  --office-error: var(--office-color-error);
+}
+
+[data-office-theme="night"] {
+  color-scheme: dark;
+  --office-surface: var(--office-color-night);
+  --office-surface-raised: var(--office-color-night-raised);
+  --office-text: var(--office-color-paper);
+  --office-text-muted: var(--office-color-night-muted);
+  --office-rule: var(--office-color-night-rule);
+  --office-control-border: var(--office-color-night-control);
+  --office-action: var(--office-color-night-action);
+  --office-action-hover: var(--office-color-night-action-hover);
+  --office-on-action: var(--office-color-ink);
+  --office-focus: var(--office-color-blue);
+  --office-success: var(--office-color-night-success);
+  --office-error: var(--office-color-night-error);
+}

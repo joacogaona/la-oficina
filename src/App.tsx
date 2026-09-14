@@ -1,244 +1,113 @@
-import type { ChangeEvent, FormEvent } from "react";
-import { useEffect, useState } from "react";
-import { ValidationError, useForm } from "@formspree/react";
+import { useState } from "react";
+import type { ReactNode } from "react";
+import { BrandSignature, Button, EditorialQuote, Eyebrow, PaperCard } from "./design-system";
+import { site, focos, buzon, encuentros } from "./content/site";
+import { RequestDialog } from "./features/requests/RequestDialog";
+import type { RequestKind } from "./features/requests/model";
+import { LegalPage } from "./pages/LegalPage";
 
-export type LetterRequest = {
-  nombre: string;
-  barrio: string;
-  email: string;
-};
+type ContactAction = (kind: RequestKind) => void;
 
-const FORMSPREE_FORM_ID = "mredjdzd";
-const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_FORM_ID}`;
-
-const initialForm: LetterRequest = {
-  nombre: "",
-  barrio: "",
-  email: "",
-};
-
-function App() {
-  const [form, setForm] = useState<LetterRequest>(initialForm);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [formspreeState, submitLetterRequest, resetLetterRequest] =
-    useForm<LetterRequest>(FORMSPREE_FORM_ID);
-
-  useEffect(() => {
-    if (!formspreeState.succeeded) {
-      return;
-    }
-
-    setForm(initialForm);
-    setShowSuccessToast(true);
-    setIsFormOpen(false);
-  }, [formspreeState.succeeded]);
-
-  useEffect(() => {
-    if (!showSuccessToast) {
-      return;
-    }
-
-    const toastTimer = window.setTimeout(() => {
-      setShowSuccessToast(false);
-    }, 5200);
-
-    return () => {
-      window.clearTimeout(toastTimer);
-    };
-  }, [showSuccessToast]);
-
-  const updateField =
-    (field: keyof LetterRequest) =>
-      (event: ChangeEvent<HTMLInputElement>) => {
-        setShowSuccessToast(false);
-        resetLetterRequest();
-        setForm((current) => ({
-          ...current,
-          [field]: event.target.value,
-        }));
-      };
-
-  const openForm = () => {
-    setShowSuccessToast(false);
-    resetLetterRequest();
-    setIsFormOpen(true);
-  };
-
-  const closeForm = () => {
-    setIsFormOpen(false);
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const request: LetterRequest = {
-      nombre: form.nombre.trim(),
-      barrio: form.barrio.trim(),
-      email: form.email.trim(),
-    };
-
-    await submitLetterRequest(request);
-  };
-
-  return (
-    <main className="relative h-dvh overflow-hidden bg-ink text-ivory">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(245,234,212,0.08),rgba(7,6,5,0)_26rem)]" />
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(180deg,rgba(7,6,5,0),#070605)]" />
-
-      <section className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
-        <h1 className="max-w-4xl font-display text-[clamp(2.75rem,7vw,6.6rem)] font-medium leading-[0.9] text-ivory">
-          La Oficina de los Últimos Cuentos
-        </h1>
-        <p className="mt-7 max-w-xl font-body text-[1.55rem] leading-8 text-parchment sm:text-3xl sm:leading-10">
-          Para quienes sospechan que la magia todavía existe y prefiere viajar
-          en sobre cerrado.
-        </p>
-        <button
-          type="button"
-          onClick={openForm}
-          className="mt-10 border border-ivory/35 bg-ink px-7 py-3 font-fell text-sm uppercase tracking-[0.12em] text-ivory hover:border-ivory/65 focus:outline-none focus:ring-2 focus:ring-ivory/30"
-        >
-          SOLICITAR UNA CARTA
-        </button>
-        <p className="mt-5 font-body text-xl italic leading-7 text-parchment/80 sm:text-2xl">
-          Una interrupción analógica en medio del ruido digital.
-        </p>
-      </section>
-
-      {showSuccessToast ? (
-        <div
-          className="pointer-events-none fixed inset-x-0 bottom-6 z-30 flex justify-center px-5"
-          role="status"
-          aria-live="polite"
-        >
-          <div className="w-full max-w-md border border-ivory/20 bg-soot px-5 py-4 text-left shadow-[0_18px_60px_rgba(0,0,0,0.45)]">
-            <p className="font-fell text-xs uppercase tracking-[0.12em] text-parchment/70">
-              Solicitud enviada
-            </p>
-            <p className="mt-1 font-body text-lg leading-6 text-ivory">
-              Tu solicitud fue registrada. La Oficina responderá cuando lo
-              considere oportuno.
-            </p>
-          </div>
-        </div>
-      ) : null}
-
-      {isFormOpen ? (
-        <div
-          className="absolute inset-0 z-20 flex items-center justify-center bg-ink px-5 py-6"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="request-title"
-        >
-          <div className="max-h-full w-full max-w-md overflow-y-auto border border-ivory/15 bg-soot p-6 sm:p-8">
-            <div className="flex items-start justify-between gap-6">
-              <div>
-                <h2
-                  id="request-title"
-                  className="font-display text-4xl font-medium leading-none text-ivory"
-                >
-                  Solicitar carta
-                </h2>
-                <p className="mt-3 font-body text-xl leading-7 text-parchment">
-                  Si la Oficina acepta tu solicitud, recibirás noticias del
-                  mensajero.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={closeForm}
-                className="border border-ivory/15 px-3 py-1 font-fell text-xl leading-none text-parchment hover:border-ivory/45 hover:text-ivory focus:outline-none focus:ring-2 focus:ring-ivory/30"
-                aria-label="Cerrar formulario"
-              >
-                ×
-              </button>
-            </div>
-
-            <form
-              action={FORMSPREE_ENDPOINT}
-              className="mt-8 space-y-5"
-              method="POST"
-              onSubmit={handleSubmit}
-            >
-              <label className="block">
-                <span className="font-fell text-xs uppercase tracking-[0.1em] text-parchment/70">
-                  Nombre
-                </span>
-                <input
-                  required
-                  name="nombre"
-                  value={form.nombre}
-                  onChange={updateField("nombre")}
-                  className="mt-2 w-full border border-ivory/15 bg-ink px-4 py-3 font-body text-xl text-ivory outline-none focus:border-ivory/50"
-                  autoComplete="name"
-                />
-                <ValidationError<LetterRequest>
-                  className="mt-2 font-body text-base leading-5 text-wax"
-                  errors={formspreeState.errors}
-                  field="nombre"
-                />
-              </label>
-
-              <label className="block">
-                <span className="font-fell text-xs uppercase tracking-[0.1em] text-parchment/70">
-                  Email
-                </span>
-                <input
-                  required
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={updateField("email")}
-                  className="mt-2 w-full border border-ivory/15 bg-ink px-4 py-3 font-body text-xl text-ivory outline-none focus:border-ivory/50"
-                  autoComplete="email"
-                />
-                <ValidationError<LetterRequest>
-                  className="mt-2 font-body text-base leading-5 text-wax"
-                  errors={formspreeState.errors}
-                  field="email"
-                />
-              </label>
-
-              <label className="block">
-                <span className="font-fell text-xs uppercase tracking-[0.1em] text-parchment/70">
-                  Barrio
-                </span>
-                <input
-                  required
-                  name="barrio"
-                  value={form.barrio}
-                  onChange={updateField("barrio")}
-                  className="mt-2 w-full border border-ivory/15 bg-ink px-4 py-3 font-body text-xl text-ivory outline-none focus:border-ivory/50"
-                  autoComplete="address-level2"
-                />
-                <ValidationError<LetterRequest>
-                  className="mt-2 font-body text-base leading-5 text-wax"
-                  errors={formspreeState.errors}
-                  field="barrio"
-                />
-              </label>
-
-              <ValidationError<LetterRequest>
-                className="font-body text-base leading-5 text-wax"
-                errors={formspreeState.errors}
-              />
-
-              <button
-                type="submit"
-                disabled={formspreeState.submitting}
-                className="w-full border border-wax bg-wax px-6 py-3 font-fell text-sm uppercase tracking-[0.12em] text-ivory focus:outline-none focus:ring-2 focus:ring-wax/50 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {formspreeState.submitting
-                  ? "ENVIANDO SOLICITUD"
-                  : "ENVIAR SOLICITUD"}
-              </button>
-            </form>
-          </div>
-        </div>
-      ) : null}
-    </main>
-  );
+function ContactLink({ kind, children, onContact, variant = "primary" }: {
+  kind: RequestKind; children: ReactNode; onContact: ContactAction;
+  variant?: "primary" | "secondary" | "quiet";
+}) {
+  const externalUrl = kind !== "preferencias" && site.googleFormUrl;
+  if (externalUrl) return <a className={`office-button office-button--${variant}`} href={externalUrl}>
+    {children}<span className="office-sr-only"> (abre Google Forms)</span><span aria-hidden="true">↗</span>
+  </a>;
+  return <Button variant={variant} onClick={() => onContact(kind)}>{children}</Button>;
 }
 
-export default App;
+function Header({ home = false }: { home?: boolean }) {
+  const prefix = home ? "" : "/";
+  return <header className="site-header office-container">
+    <a href="/" className="site-brand" aria-label="La Oficina de los Últimos Cuentos, inicio"><BrandSignature /></a>
+    <nav aria-label="Navegación principal">
+      <a href={`${prefix}#correspondencia`}>Las cartas</a><a href={`${prefix}#red`}>La red</a><a href={`${prefix}#encuentros`}>Encuentros</a>
+    </nav>
+  </header>;
+}
+
+function Footer({ onContact }: { onContact: ContactAction }) {
+  return <footer className="site-footer office-surface" data-office-theme="night"><div className="office-container">
+    <div className="footer-main">
+      <div><Eyebrow>La correspondencia sigue abierta</Eyebrow><h2 className="office-heading">Del otro lado,<br /><em>hay alguien.</em></h2></div>
+      <div className="footer-contact"><p>Para consultas, marcas y propuestas que tengan algo que ver con este pequeño mundo.</p>
+        {site.email ? <a className="office-button office-button--secondary" href={`mailto:${site.email}`}>{site.email}</a>
+          : <ContactLink kind="contacto" onContact={onContact} variant="secondary">Escribir a la Oficina <span aria-hidden="true">↗</span></ContactLink>}
+      </div>
+    </div>
+    <div className="footer-bottom"><p>Buenos Aires, Argentina.<br />Una interrupción analógica en medio del ruido digital.</p>
+      <div className="footer-links"><a href="/privacidad/">Privacidad</a><a href="/condiciones/">Sobre las consultas</a><button type="button" onClick={() => onContact("preferencias")}>Gestionar avisos y datos</button></div>
+    </div>
+  </div></footer>;
+}
+
+function Landing({ onContact }: { onContact: ContactAction }) {
+  const nextEvent = encuentros.filter(event => event.publicado && new Date(event.fin).getTime() >= Date.now()).sort((a, b) => new Date(a.inicio).getTime() - new Date(b.inicio).getTime())[0];
+  const activeFocos = focos.filter(foco => foco.publicado);
+  return <>
+    <div className="hero office-surface" data-office-theme="night">
+      <div className="hero-grid office-container">
+        <div className="hero-copy"><Eyebrow>Correspondencia desde Buenos Aires</Eyebrow><h1 className="office-display">Todavía hay<br />cosas que llegan<br /><em>en un sobre.</em></h1>
+          <p className="hero-description">Escribimos cuentos y los hacemos llegar en papel. Una carta, un pequeño misterio y algo que pasa del otro lado de la pantalla.</p>
+          <div className="hero-actions"><ContactLink kind="recibir" onContact={onContact}>Recibir un cuento</ContactLink><ContactLink kind="regalar" onContact={onContact} variant="quiet">Regalar un cuento <span aria-hidden="true">↗</span></ContactLink></div>
+        </div>
+        <figure className="letter-composition" aria-label="Una carta y un sobre de La Oficina, representados con papel y tipografía">
+          <div className="letter-sheet" data-office-theme="paper"><div className="letter-top"><span>Correspondencia<br />de La Oficina</span><span className="letter-mark" aria-hidden="true">L.</span></div>
+            <p className="letter-greeting">Para quien encuentre esto:</p><p className="letter-message">Siempre que me tomo un colectivo vacío <em>pido un deseo.</em></p><div className="letter-bottom"><span>Cuento Nº 001</span><span>Buenos Aires</span></div>
+          </div>
+          <div className="letter-envelope" aria-hidden="true"><BrandSignature /><span className="envelope-note">Abrir cuando el mundo<br />haga demasiado ruido.</span></div>
+          <figcaption>Papel. Tinta. Un camino hasta vos.</figcaption>
+        </figure>
+      </div>
+      <div className="hero-bottom office-container"><span className="office-label">La magia todavía viaja en sobre cerrado.</span><a href="#correspondencia">Seguí el hilo <span aria-hidden="true">↓</span></a></div>
+    </div>
+    <div className="office-surface" data-office-theme="paper">
+      <section id="correspondencia" className="section office-container" aria-labelledby="correspondencia-title">
+        <div className="section-heading"><Eyebrow>01 / Las cartas</Eyebrow><div><h2 id="correspondencia-title" className="office-heading">Una pequeña resistencia.<br /><em>De mano en mano.</em></h2><p>La Oficina es una red de personas que escribe, guarda su identidad y hace circular cuentos por la ciudad. Nos encontrás en nuestras cartas y en quienes las llevan.</p></div></div>
+        <div className="how-grid"><article><span className="step-number">I.</span><h3>Alguien escribe.</h3><p>Un cuento toma forma. Lo imprimimos, lo guardamos en un sobre y lo cerramos para que encuentre a su lector.</p></article><article><span className="step-number">II.</span><h3>La carta viaja.</h3><p>Hasta una puerta, un café o una librería. La red empieza en CABA y busca llevar sus cartas a toda la Argentina.</p></article><article><span className="step-number">III.</span><h3>Algo se abre.</h3><p>Un rato para leer. Una historia que podés guardar, prestar o hacer llegar a alguien más.</p></article></div>
+      </section>
+      <section id="recibir" className="receive-section" aria-labelledby="recibir-title"><div className="office-container">
+        <div className="section-heading"><Eyebrow>02 / De este lado del buzón</Eyebrow><h2 id="recibir-title" className="office-heading">Hay dos formas<br />de empezar esta historia.</h2></div>
+        <div className="receive-grid">
+          <PaperCard className="receive-card" tone="paper"><Eyebrow>Una carta para vos</Eyebrow><h3>Volver a esperar<br /><em>al cartero.</em></h3><p>La propuesta es simple: una suscripción mensual para recibir una carta con un cuento cada mes y enterarte de nuestros encuentros.</p><ContactLink kind="recibir" onContact={onContact}>Consultar por la suscripción <span aria-hidden="true">↗</span></ContactLink></PaperCard>
+          <PaperCard className="receive-card" tone="paper"><Eyebrow>Una carta para alguien</Eyebrow><h3>Hay regalos<br /><em>que se leen.</em></h3><p>Pensá en alguien a quien le vendría bien encontrar una historia en su puerta. Podemos conversar cómo hacerle llegar un cuento.</p><ContactLink kind="regalar" onContact={onContact} variant="secondary">Consultar por un regalo <span aria-hidden="true">↗</span></ContactLink></PaperCard>
+        </div><p className="section-note">Por ahora recibimos consultas. Te confirmamos disponibilidad, precio y envío antes de pedir una dirección o coordinar un pago.</p>
+      </div></section>
+      <section id="red" className="section office-container" aria-labelledby="red-title">
+        <div className="section-heading"><Eyebrow>03 / La red subterránea</Eyebrow><div><h2 id="red-title" className="office-heading">La Oficina también<br /><em>vive en la ciudad.</em></h2><p>Cafés, librerías, bares y espacios culturales. Lugares donde un cuento puede pasar de una mano a otra.</p></div></div>
+        {activeFocos.length ? <div className="focos-list">{activeFocos.map(foco => <article className="foco" key={foco.id}><Eyebrow>{foco.barrio} · {foco.ciudad}</Eyebrow><h3>{foco.nombre}</h3><p>{foco.direccion}<br />{foco.horarios}</p><p>{foco.modalidad}</p><a href={foco.urlMapa} target="_blank" rel="noreferrer">Cómo llegar <span aria-hidden="true">↗</span><span className="office-sr-only"> (abre otra pestaña)</span></a></article>)}</div> : <div className="network-empty"><span className="office-label">Buenos Aires / Primeras coordenadas</span><p>Estamos tejiendo la red.<br />Acá vas a encontrar nuestros puntos de distribución cuando estén confirmados.</p></div>}
+        <div className="join-space"><div><h3>¿Tu espacio podría ser un foco?</h3><p>Si tenés un lugar donde nuestros cuentos puedan quedarse un rato, nos gustaría conocerlo.</p></div><ContactLink kind="foco" onContact={onContact} variant="secondary">Sumar un espacio <span aria-hidden="true">↗</span></ContactLink></div>
+      </section>
+      <section id="mensajeros" className="messenger-section" aria-labelledby="mensajeros-title"><div className="office-container messenger-grid">
+        <PaperCard tone="olive" className="messenger-card"><Eyebrow>Correspondencia abierta</Eyebrow><EditorialQuote>Una red existe<br />porque alguien<br /><em>lleva algo<br />a otro lugar.</em></EditorialQuote><BrandSignature /></PaperCard>
+        <div className="messenger-copy"><Eyebrow>04 / Los mensajeros</Eyebrow><h2 id="mensajeros-title" className="office-heading">Quizás también<br />seas parte<br /><em>de la Oficina.</em></h2><p>Los mensajeros se acercan con una carta y un cuento propio. La Oficina lee, selecciona historias para publicar y acuerda cómo hacerlas circular.</p><p>Si vivís en otra ciudad, también podés ayudarnos a llevar la correspondencia hasta allí.</p>
+          {buzon ? <div className="postal-address"><Eyebrow>Enviá tu carta a</Eyebrow><address>{buzon.destinatario}<br />{buzon.direccion}<br />{buzon.codigoPostal} · {buzon.ciudad}</address><p>{buzon.instrucciones}</p><a href={buzon.condicionesUrl}>Leer condiciones de la convocatoria</a></div> : <p className="office-muted">Estamos preparando el buzón. Publicaremos la dirección y las condiciones de la convocatoria cuando esté listo.</p>}
+          <ContactLink kind="mensajero" onContact={onContact} variant="secondary">Consultar cómo participar <span aria-hidden="true">↗</span></ContactLink>
+        </div>
+      </div></section>
+      <section id="encuentros" className="section office-container" aria-labelledby="encuentros-title">
+        <div className="section-heading"><Eyebrow>05 / Fuera del sobre</Eyebrow><div><h2 id="encuentros-title" className="office-heading">A veces, la historia<br /><em>nos encuentra juntos.</em></h2><p>También nos reunimos para escuchar, leer y encontrarnos. La correspondencia tiene sus noches en la ciudad.</p></div></div>
+        <div className="event-panel"><div><Eyebrow>{nextEvent ? "Próximo encuentro" : "La próxima cita"}</Eyebrow><h3>{nextEvent?.titulo || "Todavía no anunciamos el próximo encuentro."}</h3>
+          {nextEvent ? <><p><time dateTime={nextEvent.inicio}>{new Intl.DateTimeFormat("es-AR", { dateStyle: "full", timeStyle: "short", timeZone: "America/Argentina/Buenos_Aires" }).format(new Date(nextEvent.inicio))}</time></p><p>{nextEvent.lugar}<br />{nextEvent.acceso}</p><p>{nextEvent.descripcion}</p><p className="office-label">{nextEvent.estado === "agotado" ? "Cupo completo" : nextEvent.estado === "cancelado" ? "Encuentro cancelado" : "Encuentro confirmado"}</p>{nextEvent.reservaUrl && nextEvent.estado === "disponible" && <a className="office-button office-button--secondary" href={nextEvent.reservaUrl}>Consultar reserva <span aria-hidden="true">↗</span></a>}</> : <p>Cuando haya fecha, vas a encontrarla acá. Si querés, también podemos avisarte por mail.</p>}
+        </div><div className="event-action"><ContactLink kind="encuentros" onContact={onContact}>Recibir avisos de encuentros</ContactLink><p>Solo si vos querés.<br />Podés pedir la baja en cualquier momento.</p></div></div>
+      </section>
+      <div className="closing-line office-container"><p>Esta página termina acá.<br /><em>La historia sigue afuera.</em></p><a href="#contenido" aria-label="Volver al comienzo">↑</a></div>
+    </div>
+  </>;
+}
+
+export default function App() {
+  const [request, setRequest] = useState<RequestKind>("recibir");
+  const [open, setOpen] = useState(false);
+  const contact: ContactAction = kind => { setRequest(kind); setOpen(true); };
+  const path = window.location.pathname.replace(/\/+$/, "");
+  const legal = path === "/privacidad" ? "privacidad" : path === "/condiciones" ? "condiciones" : null;
+  return <div className="site office-surface" data-office-theme="paper"><a className="skip-link" href="#contenido">Saltar al contenido</a>
+    <div className="office-surface" data-office-theme="night"><Header home={!legal} /></div>
+    {legal ? <LegalPage kind={legal} onContact={contact} /> : <main id="contenido" tabIndex={-1}><Landing onContact={contact} /></main>}
+    <Footer onContact={contact} /><RequestDialog open={open} kind={request} onKindChange={setRequest} onClose={() => setOpen(false)} />
+  </div>;
+}

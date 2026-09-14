@@ -1,0 +1,44 @@
+{
+  "layouts": [
+    {
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "width": 1440,
+      "scroll": 1440
+    }
+  ],
+  "dialogMetrics": {
+    "left": 23,
+    "right": 352,
+    "width": 375,
+    "theme": "night"
+  },
+  "fonts": [
+    "Cormorant Garamond/italic",
+    "Cormorant Garamond/normal",
+    "EB Garamond/normal",
+    "Inconsolata/normal"
+  ],
+  "runtimeErrors": [],
+  "externalRequests": [],
+  "networkMutations": [],
+  "checks": [
+    "Responsive 320/375/768/1440",
+    "Native modal focus containment, Escape and restoration",
+    "Invalid/valid demo form",
+    "Unselected consent",
+    "Theme controls",
+    "Reduced motion",
+    "Legacy landing opens and closes"
+  ]
+}

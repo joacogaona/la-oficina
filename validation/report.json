@@ -1,0 +1,48 @@
+{
+  "layouts": [
+    {
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "width": 1440,
+      "scroll": 1440
+    }
+  ],
+  "runtimeErrors": [],
+  "unexpectedRequests": [],
+  "interceptedSubmissions": 10,
+  "flows": [
+    "recibir",
+    "regalar",
+    "foco",
+    "mensajero",
+    "encuentros",
+    "contacto",
+    "preferencias"
+  ],
+  "checks": [
+    "empty validation",
+    "gift buyer separation",
+    "opt-in required for event request",
+    "server failure",
+    "network failure",
+    "malformed response",
+    "duplicate submit",
+    "stable retry ID",
+    "persistent success",
+    "focus trap and Escape restoration",
+    "legal routes and metadata",
+    "reduced motion",
+    "200% text reflow"
+  ],
+  "realSubmissions": 0
+}
