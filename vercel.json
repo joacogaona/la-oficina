@@ -1,5 +1,7 @@
 {
   "redirects": [
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "www.laoficinaexiste.com" }], "destination": "https://laoficinaexiste.com/$1", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "la-oficina-seven.vercel.app" }], "destination": "https://laoficinaexiste.com/$1", "permanent": true },
     { "source": "/condiciones", "destination": "/", "permanent": true },
     { "source": "/condiciones/", "destination": "/", "permanent": true },
     { "source": "/privacidad", "destination": "/", "permanent": true },

@@ -26,7 +26,7 @@ Configurar también estas variables en el hosting al desplegar.
 Antes de publicar:
 
 - Contratar la casilla de correo (o el punto de recepción acordado) y cargar `VITE_POSTAL_ADDRESS`; definir quién retira las cartas y cómo se responde. Sin dirección, la web no se publica.
-- En Vercel, `laoficinaexiste.com` ya sirve producción (27-sep) y es el canonical. Falta que `www.laoficinaexiste.com` y `la-oficina-seven.vercel.app` redirijan a él (Edit en cada dominio, Redirect to Another Domain, 308). Decidir el plan de Vercel y, después de publicar, verificar el dominio en Search Console y enviar el sitemap.
+- En Vercel, `laoficinaexiste.com` ya sirve producción (27-sep) y es el canonical. `www.laoficinaexiste.com` y `la-oficina-seven.vercel.app` redirigen a él con 308 desde [vercel.json](vercel.json) (reglas por host, 28-sep); si algún día se cambia el dominio, actualizar esas reglas y `VITE_PUBLIC_SITE_URL`. Decidir el plan de Vercel y, ya publicada, verificar el dominio en Search Console y enviar el sitemap.
 
 ## Sistema de diseño
 
