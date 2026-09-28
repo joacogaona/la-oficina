@@ -19,30 +19,15 @@
   ],
   "runtimeErrors": [],
   "unexpectedRequests": [],
-  "interceptedSubmissions": 10,
-  "flows": [
-    "recibir",
-    "regalar",
-    "foco",
-    "mensajero",
-    "encuentros",
-    "contacto",
-    "preferencias"
-  ],
   "checks": [
-    "empty validation",
-    "gift buyer separation",
-    "opt-in required for event request",
-    "server failure",
-    "network failure",
-    "malformed response",
-    "duplicate submit",
-    "stable retry ID",
-    "persistent success",
-    "focus trap and Escape restoration",
-    "legal routes and metadata",
+    "postal address or explicit pending state",
+    "no form, mail link or products",
+    "canonical and share card metadata",
+    "Organization JSON-LD",
+    "pre-rendered page without JavaScript",
+    "no console errors (hydration)",
+    "no horizontal overflow at 320 to 1440",
     "reduced motion",
     "200% text reflow"
-  ],
-  "realSubmissions": 0
+  ]
 }

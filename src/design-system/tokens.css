@@ -1,4 +1,4 @@
-/* La Oficina · v1.0 · Source of truth for all new web interfaces. */
+/* La Oficina · v1.1 · Source of truth for all new web interfaces. */
 :root {
   --office-color-paper: #f3f0e7;
   --office-color-paper-raised: #fbf9f2;
@@ -24,25 +24,20 @@
   --office-color-night-action: #edb4a2;
   --office-color-night-action-hover: #f3cbbb;
 
-  /* Legacy landing aliases. Keep their values until the landing is redesigned. */
-  --office-legacy-ink-rgb: 7 6 5;
-  --office-legacy-soot-rgb: 17 16 14;
-  --office-legacy-ivory-rgb: 245 234 212;
-  --office-legacy-parchment-rgb: 217 201 166;
-  --office-legacy-wax-rgb: 95 22 24;
-  --office-legacy-ink: rgb(var(--office-legacy-ink-rgb));
-
   --office-font-display: "Cormorant Garamond", Georgia, serif;
-  --office-font-body: "EB Garamond", Georgia, serif;
+  --office-font-body: "Inconsolata", "Courier New", monospace;
   --office-font-label: "Inconsolata", "Courier New", monospace;
-  --office-text-caption: 0.8125rem;
-  --office-text-label: 0.875rem;
-  --office-text-small: 1.0625rem;
-  --office-text-body: 1.25rem;
-  --office-text-lead: clamp(1.375rem, 1.1rem + 0.75vw, 1.75rem);
+  /* Reserved for long-form reading (a story on screen). The site does not load it. */
+  --office-font-reading: "EB Garamond", Georgia, serif;
+  --office-text-caption: 0.75rem;
+  --office-text-label: 0.8125rem;
+  --office-text-small: 0.9375rem;
+  --office-text-body: 1.0625rem;
+  --office-text-lead: clamp(1.25rem, 1.05rem + 0.6vw, 1.5rem);
   --office-text-heading: clamp(2.25rem, 1.5rem + 2.5vw, 4rem);
   --office-text-display: clamp(3rem, 1.5rem + 5vw, 6.75rem);
-  --office-leading-body: 1.5;
+  --office-text-signature: clamp(1.9rem, 0.25rem + 8.4vw, 6.75rem);
+  --office-leading-body: 1.6;
   --office-leading-display: 1.04;
   --office-tracking-label: 0.08em;
 
@@ -59,7 +54,7 @@
   --office-gutter: clamp(1.25rem, 4vw, 4rem);
   --office-section-space: clamp(3.5rem, 7vw, 7rem);
   --office-width-page: 76rem;
-  --office-width-reading: 38rem;
+  --office-width-reading: 40rem;
   --office-width-form: 32rem;
   --office-control-height: 3rem;
   --office-radius: 0;
@@ -79,12 +74,29 @@
   --office-text-muted: var(--office-color-muted);
   --office-rule: var(--office-color-rule);
   --office-control-border: var(--office-color-control);
-  --office-action: var(--office-color-wax);
-  --office-action-hover: var(--office-color-wax-hover);
-  --office-on-action: var(--office-color-paper-raised);
-  --office-focus: var(--office-color-wax);
-  --office-success: var(--office-color-success);
+  --office-action: var(--office-color-ink);
+  --office-action-hover: var(--office-color-night);
+  --office-on-action: var(--office-color-paper);
+  --office-focus: var(--office-color-ink);
+  --office-success: var(--office-color-ink);
   --office-error: var(--office-color-error);
+}
+
+/* Cover surface: the signature's own red paper. Ink only; no muted text on red. */
+[data-office-theme="red"] {
+  color-scheme: light;
+  --office-surface: var(--office-color-red);
+  --office-surface-raised: var(--office-color-red);
+  --office-text: var(--office-color-ink);
+  --office-text-muted: var(--office-color-ink);
+  --office-rule: var(--office-color-ink);
+  --office-control-border: var(--office-color-ink);
+  --office-action: var(--office-color-ink);
+  --office-action-hover: var(--office-color-night);
+  --office-on-action: var(--office-color-red);
+  --office-focus: var(--office-color-ink);
+  --office-success: var(--office-color-ink);
+  --office-error: var(--office-color-ink);
 }
 
 [data-office-theme="night"] {

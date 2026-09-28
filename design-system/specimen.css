@@ -145,3 +145,11 @@ button, input, select, textarea { font: inherit; }
   .spec-hero { padding-block: 2rem; }
   .office-surface { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
+
+.spec-signature-cover { display: grid; gap: 2rem; margin-top: 1.5rem; padding: clamp(1.5rem, 4vw, 3rem); }
+.spec-signature-cover .office-signature { display: block; }
+
+/* Envelope sample on the red surface. */
+.spec-envelope { padding: clamp(1.5rem, 4vw, 3rem); }
+.spec-envelope address { display: grid; font-size: var(--office-text-label); line-height: 1.5; }
+.spec-envelope address > span:first-child { font-weight: 500; }

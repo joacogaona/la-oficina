@@ -1,16 +1,13 @@
-/** Only public, verified information belongs here. Never add reader data. */
+/** Only public, verified information belongs here. Never add reader data, author names, prices or dates. */
 export const site = {
   name: "La Oficina de los Últimos Cuentos",
-  email: import.meta.env.VITE_CONTACT_EMAIL?.trim() || "",
-  googleFormUrl: import.meta.env.VITE_GOOGLE_FORM_URL?.trim() || "",
-  // Existing reception channel; keep until its replacement has been verified.
-  formspreeId: import.meta.env.VITE_FORMSPREE_ID?.trim() || "mredjdzd",
+  city: "Buenos Aires, Argentina",
+  /** The Oficina's own words (Joaquín, 28-sep-2026), one string per paragraph. The breaks are typographic; the wording is his. No mechanics (prices, focos, events). */
+  manifiesto: [
+    "Hay un mundo que no sabíamos que teníamos hasta que lo empezamos a perder. Un mundo invisible a la mirada distraída. Un mundo donde las palabras se piensan por días y solo pueden ser pronunciadas en un encuentro. Un mundo que no se puede explicar, solo se puede sentir. Un mundo donde lo que se lee se toca. Un mundo que parece olvidado y que, sin embargo, seguimos buscando.",
+    "Si esto llegó a tus manos, seguramente sos un buscador. No sabés exactamente lo que buscás, pero lo hacés.",
+    "Solo vinimos a decirte que ese mundo todavía existe. Las oficinas que lo mantienen con vida también.",
+  ],
+  /** Postal address for letters, one line per `|` segment (mailbox, branch, city). Empty until the mailbox exists: the page says so instead of inventing one. Never a member's home address. */
+  postal: (import.meta.env.VITE_POSTAL_ADDRESS ?? "").split("|").map((line: string) => line.trim()).filter(Boolean) as string[],
 };
-export type Foco = { id: string; nombre: string; barrio: string; ciudad: string; direccion: string; horarios: string; modalidad: string; urlMapa: string; publicado: boolean };
-export const focos: Foco[] = [];
-export type Buzon = { destinatario: string; direccion: string; codigoPostal: string; ciudad: string; instrucciones: string; condicionesUrl: string };
-// Enable only once the address and publication conditions are agreed.
-export const buzon: Buzon | null = null;
-export type Encuentro = { id: string; titulo: string; inicio: string; fin: string; lugar: string; descripcion: string; acceso: string; estado: "disponible" | "agotado" | "cancelado"; reservaUrl?: string; publicado: boolean };
-// Include an explicit timezone offset in inicio/fin, e.g. -03:00.
-export const encuentros: Encuentro[] = [];

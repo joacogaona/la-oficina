@@ -3,7 +3,7 @@ import type { FormEvent, ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import {
   BrandSignature, Button, CheckboxField, Dialog, EditorialQuote, Eyebrow,
-  Notice, PaperCard, SelectField, TextAreaField, TextField,
+  Envelope, Notice, PaperCard, SelectField, TextAreaField, TextField,
 } from "../src/design-system";
 import type { OfficeTheme } from "../src/design-system";
 import "../src/design-system/styles.css";
@@ -17,8 +17,8 @@ const sections = [
 const swatches = [
   ["Papel", "paper", "#F3F0E7", "La superficie de lectura."],
   ["Tinta", "ink", "#1C1C18", "Texto, firma y estructura."],
-  ["Lacre", "wax", "#71312F", "Acción principal sobre papel."],
-  ["Rojo", "red", "#D2645B", "Acento de identidad."],
+  ["Lacre", "wax", "#71312F", "Reservado para piezas; la web usa tinta como acción."],
+  ["Rojo", "red", "#D2645B", "La portada de la web y el papel de la firma."],
   ["Oliva", "olive", "#818B59", "Piezas y expedientes."],
   ["Celeste", "blue", "#B0C8CC", "Piezas y expedientes."],
 ];
@@ -47,9 +47,9 @@ function DemoForm() {
     <TextField label="Mail" name="demo-email" type="email" autoComplete="off" required value={email}
       onChange={event => { setEmail(event.target.value); setComplete(false); }} error={error}
       hint="Este ejemplo funciona solo en tu navegador." />
-    <SelectField label="Quiero acercarme para" name="demo-purpose" defaultValue="recibir">
-      <option value="recibir">Recibir un cuento</option><option value="regalar">Regalar un cuento</option>
-      <option value="foco">Sumar un espacio</option><option value="mensajero">Postularme como mensajero</option>
+    <SelectField label="Motivo" name="demo-purpose" defaultValue="cuento">
+      <option value="cuento">Recibir un cuento</option><option value="espacio">Sumar un café o librería</option>
+      <option value="marca">Proponer algo con una marca</option>
     </SelectField>
     <CheckboxField label="Quiero recibir avisos de encuentros y novedades de La Oficina." name="demo-optin"
       hint="Opcional. La casilla empieza desmarcada." />
@@ -100,16 +100,17 @@ function Specimen() {
           ].map(([title, body], index) => <div key={title}><Eyebrow>Principio 0{index + 1}</Eyebrow><h3>{title}</h3><p>{body}</p></div>)}
         </div>
         <div className="spec-signature-panel"><BrandSignature /><div><Eyebrow>Firma tipográfica para web</Eyebrow><p>Una interpretación funcional de la composición original. El logotipo de imprenta se conserva como referencia.</p></div></div>
+        <div className="spec-signature-cover office-surface" data-office-theme="red"><Eyebrow>Portada / firma grande</Eyebrow><BrandSignature className="office-signature--display" /><p className="office-lead">Cuentos por carta.</p></div>
       </Section>
-      <Section id="tipografia" number="02" title="Tres voces, una correspondencia.">
-        <div className="spec-type-row"><div><Eyebrow>01 · Titulares y citas</Eyebrow><p>Cormorant Garamond<br /><span className="office-muted">Regular 400 · Medium 500 · Italic</span></p></div><div className="spec-type-display">El mundo todavía<br /><em>guarda secretos.</em></div></div>
-        <div className="spec-type-row"><div><Eyebrow>02 · Lectura</Eyebrow><p>EB Garamond<br /><span className="office-muted">Regular 400 · Medium 500 · Italic</span></p></div><p className="office-lead">Hay un cuento esperando en algún lugar de la ciudad. Puede estar en un café, entre los libros o del otro lado de tu puerta.</p></div>
-        <div className="spec-type-row"><div><Eyebrow>03 · Archivo e interfaz</Eyebrow><p>Inconsolata<br /><span className="office-muted">Regular 400 · Medium 500</span></p></div><div className="spec-type-mono">EXPEDIENTE Nº 003<br />LA OFICINA · BUENOS AIRES<br /><span>Nombre / Dirección / Correspondencia</span></div></div>
-        <div className="spec-notes"><p><strong>La cursiva es un acento.</strong> Una frase o unas pocas palabras. Las instrucciones van en letra de lectura.</p><p><strong>La letra de archivo organiza.</strong> Rótulos, botones, números y datos. Los párrafos largos conservan la serif.</p></div>
-        <div className="spec-scale">{[["13", "Notas"], ["14", "Rótulos"], ["17", "Ayudas"], ["20", "Lectura"], ["22–28", "Bajadas"], ["36–64", "Secciones"], ["48–108", "Portada"]].map(([value, label]) => <div key={label}><span>{value}</span><small>{label} · px</small></div>)}</div>
+      <Section id="tipografia" number="02" title="Dos voces, una correspondencia.">
+        <div className="spec-type-row"><div><Eyebrow>01 · La voz de los cuentos</Eyebrow><p>Cormorant Garamond<br /><span className="office-muted">Italic 400 para frases de sobre y citas</span></p></div><div className="spec-type-display">El mundo todavía<br /><em>guarda secretos.</em></div></div>
+        <div className="spec-type-row"><div><Eyebrow>02 · La voz de la Oficina</Eyebrow><p>Inconsolata<br /><span className="office-muted">Regular 400 · Medium 500 · firma, texto, rótulos, botones y campos</span></p></div><p className="office-lead">La Oficina escribe cuentos y los hace llegar en papel: una carta con un cuento, un objeto y un sobre cerrado.</p></div>
+        <div className="spec-type-row"><div><Eyebrow>03 · Lectura larga, reservada</Eyebrow><p>EB Garamond<br /><span className="office-muted">Declarada para publicar un cuento en pantalla; la web no la carga</span></p></div><p className="office-lead" style={{ fontFamily: "var(--office-font-reading)", fontSize: "1.375rem" }}>Hay un cuento esperando en algún lugar de la ciudad. Puede estar en un café, entre los libros o del otro lado de tu puerta.</p></div>
+        <div className="spec-notes"><p><strong>La serif es la voz de los cuentos.</strong> Solo frases de sobre y citas, recta con un fragmento en cursiva. Nunca instrucciones ni botones. En la web pública no habla ningún cuento: allí no aparece.</p><p><strong>El mono es la voz de la Oficina.</strong> Firma, texto corriente, rótulos, números, campos y botones, como la máquina de escribir de la firma.</p></div>
+        <div className="spec-scale">{[["12", "Notas"], ["13", "Rótulos"], ["15", "Ayudas"], ["17", "Lectura"], ["20–24", "Bajadas"], ["28–44", "Frases"], ["30–108", "Firma"]].map(([value, label]) => <div key={label}><span>{value}</span><small>{label} · px</small></div>)}</div>
       </Section>
       <Section id="color" number="03" title="Color que pertenece al papel.">
-        <p className="office-reading office-lead spec-intro">La base es papel y tinta. Rojo, oliva y celeste aparecen como piezas de una colección. La noche queda para umbrales y momentos de mayor intimidad.</p>
+        <p className="office-reading office-lead spec-intro">La web usa papel, tinta y el rojo de la firma. Oliva, celeste y noche quedan para piezas de colección y para este muestrario.</p>
         <div className="spec-swatches">{swatches.map(([name, token, hex, role]) => <div key={token}><div className={"spec-swatch spec-swatch--" + token}><span>{name}</span><code>{hex}</code></div><p>{role}</p></div>)}</div>
         <p className="spec-caption">Valores digitales propuestos a partir de tus referencias. No son muestras certificadas de imprenta.</p>
         <div className="spec-two-col spec-themes">
@@ -139,12 +140,15 @@ function Specimen() {
           <PaperCard tone="night"><Eyebrow>Cuento Nº 003</Eyebrow><EditorialQuote>“El silencio caía como un manto <em>por encima de todo.</em>”</EditorialQuote><BrandSignature /></PaperCard>
         </div>
         <p className="spec-caption">Frases tomadas de los sobres de referencia. Las fichas son muestras gráficas y no anuncian disponibilidad.</p>
+        <div className="spec-component-heading"><div><Eyebrow>Sobre / dirección</Eyebrow><p>El frente de un sobre de papel sobre cualquier ambiente: líneas del remitente, la estampilla con la “L.” de la firma y la dirección abajo a la derecha. Es donde la web pone la casilla de la Oficina.</p></div></div>
+        <div className="office-surface spec-envelope" data-office-theme="red"><Envelope><address><span>La Oficina de los Últimos Cuentos</span><span>Casilla de Correo 123</span><span>Sucursal 12, Ciudad de Buenos Aires</span></address></Envelope></div>
+        <p className="spec-caption">Dirección ficticia de muestra. La real solo aparece cuando está confirmada.</p>
         <div className="spec-layout-rule"><Eyebrow>Composición</Eyebrow><p>Contenedor de 1.216 px · Lectura hasta 608 px · Formulario hasta 512 px · Controles de 48 px</p><p>Espaciado: 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96 / 128</p></div>
       </Section>
       <Section id="voz" number="05" title="El misterio invita. La interfaz orienta.">
-        <div className="spec-two-col"><div><p className="office-lead">La Oficina habla en primera persona plural, con voseo, calidez y pocas palabras. Su identidad se protege sin poner a prueba a quien llega.</p><p className="spec-intro">En la nueva definición: una carta con un cuento cada mes, avisos de encuentros mensuales y una red de focos y mensajeros. Precio, fechas y cobertura efectiva se completan antes de ofrecerlos.</p></div>
-          <div className="spec-copy-examples"><div><Eyebrow>Invitar</Eyebrow><p>Hay un cuento esperando del otro lado de tu puerta.</p></div><div><Eyebrow>Explicar</Eyebrow><p>Con la suscripción recibís una carta con un cuento cada mes.</p></div><div><Eyebrow>Orientar</Eyebrow><p>Dejanos tu mail para responder tu consulta.</p></div><div><Eyebrow>Confirmar</Eyebrow><p>Recibimos tu solicitud. Te responderemos al mail que nos dejaste.</p></div></div></div>
-        <div className="spec-notes"><p><strong>Mostrar.</strong> Sobres, papel, manos sin rasgos identificables, mostradores, sellos y recorridos.</p><p><strong>Evitar.</strong> Rostros del equipo, lenguaje de urgencia comercial, cifras inventadas, efectos de máquina de escribir y formularios que esconden condiciones.</p></div>
+        <div className="spec-two-col"><div><p className="office-lead">La Oficina habla en primera persona plural, con voseo, calidez y pocas palabras. Su identidad se protege sin poner a prueba a quien llega.</p><p className="spec-intro">La web es presencia: el manifiesto y la dirección postal. Todo contacto empieza por carta; precio, fechas, focos y encuentros no se anuncian en pantalla hasta existir.</p></div>
+          <div className="spec-copy-examples"><div><Eyebrow>Invitar</Eyebrow><p>Hay un cuento esperando del otro lado de tu puerta.</p></div><div><Eyebrow>Explicar</Eyebrow><p>Cuentos por carta, por correo o de mano en mano.</p></div><div><Eyebrow>Orientar</Eyebrow><p>Si querés mandar un cuento, vender nuestros cuentos en tu local o hacernos una propuesta, mandanos una carta a:</p></div><div><Eyebrow>Prometer lo justo</Eyebrow><p>Leemos todo lo que llega. Si dejás un mail o un teléfono en la carta, te contactamos.</p></div></div></div>
+        <div className="spec-notes"><p><strong>Mostrar.</strong> Papel, manos sin rasgos identificables, mostradores, sellos y recorridos. En la web pública no se muestran los sobres ni los cuentos como producto.</p><p><strong>Evitar.</strong> Rostros del equipo, lenguaje de urgencia comercial, cifras inventadas, efectos de máquina de escribir y formularios que esconden condiciones.</p></div>
       </Section>
       <Section id="referencias" number="06" title="De dónde viene este lenguaje.">
         <p className="office-reading spec-intro">Las nueve referencias originales quedan archivadas junto al sistema. El logotipo, los grabados y las fuentes comerciales que aparecen en ellas conservan su condición de referencia, hasta contar con los originales aptos para web.</p>
@@ -156,7 +160,7 @@ function Specimen() {
         <div className="spec-reference-links"><a href="./references/04-moodboard.png" target="_blank" rel="noreferrer">Moodboard gráfico</a><a href="./references/05-identidad.png" target="_blank" rel="noreferrer">Referencias de identidad</a><a href="./references/06-colores-y-fuentes.png" target="_blank" rel="noreferrer">Colores y fuentes</a><a href="./references/01-sobre-celeste.png" target="_blank" rel="noreferrer">Sobre 001</a><a href="./references/03-sobre-oliva.png" target="_blank" rel="noreferrer">Sobre 002</a><a href="./references/02-sobre-noche.png" target="_blank" rel="noreferrer">Sobre 003</a></div>
       </Section>
     </main>
-    <footer className="spec-footer office-container"><BrandSignature /><div><Eyebrow>Sistema de diseño · v1.0</Eyebrow><p>La pantalla es el comienzo de otra cosa.</p><a href="/DESIGN_SYSTEM.md">Leer la guía de implementación</a></div></footer>
+    <footer className="spec-footer office-container"><BrandSignature /><div><Eyebrow>Sistema de diseño · v1.1</Eyebrow><p>La pantalla es el comienzo de otra cosa.</p><a href="/DESIGN_SYSTEM.md">Leer la guía de implementación</a></div></footer>
     <Dialog open={dialog} onClose={() => setDialog(false)} title="Escribir a la Oficina" theme={theme}
       description="Muestra del sistema de diseño. Podés probar los campos con datos inventados; no se envía información."><DemoForm /></Dialog>
   </div>;

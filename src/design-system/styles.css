@@ -35,6 +35,8 @@
 .office-signature { display: inline-block; max-width: 100%; font-family: var(--office-font-label); font-size: clamp(1.125rem, 2vw, 1.5rem); line-height: 1.12; letter-spacing: -0.05em; font-weight: 500; }
 .office-signature small { font-size: 0.5em; margin-left: 0.35em; letter-spacing: 0; }
 .office-signature > span > span { display: inline-block; margin-left: 2.1em; }
+.office-signature--display { font-size: var(--office-text-signature); line-height: 1.06; letter-spacing: -0.055em; }
+@media (max-width: 680px) { .office-signature--display > span > span { margin-left: 1.4em; } }
 .office-button {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--office-space-2);
   min-height: var(--office-control-height); max-width: 100%; padding: var(--office-space-3) var(--office-space-6);
@@ -55,7 +57,7 @@
 .office-button:active:not(:disabled) { box-shadow: inset 0 0 0 1px currentColor; }
 .office-field { display: grid; gap: var(--office-space-2); min-width: 0; }
 .office-field__label { font-family: var(--office-font-label); font-size: var(--office-text-label); line-height: 1.4; }
-.office-field__required { color: var(--office-text-muted); }
+.office-field__optional { color: var(--office-text-muted); }
 .office-input {
   width: 100%; min-width: 0; min-height: var(--office-control-height); margin: 0;
   padding: var(--office-space-3) var(--office-space-4); border: 1px solid var(--office-control-border);
@@ -80,6 +82,13 @@ textarea.office-input { resize: vertical; min-height: 8rem; }
 .office-quote cite { display: block; margin-top: var(--office-space-6); font-family: var(--office-font-label); font-size: var(--office-text-label); font-style: normal; letter-spacing: var(--office-tracking-label); text-transform: uppercase; }
 .office-card { padding: clamp(1.5rem, 3vw, 3rem); background: var(--office-surface); color: var(--office-text); border: 1px solid var(--office-rule); border-radius: 0; }
 .office-card--red { background: var(--office-color-red); color: var(--office-color-ink); border-color: transparent; }
+/* Envelope front, a small detail (18rem at most): a paper card on any surface; sender lines top left, the stamp with the "L." top right, the address bottom right. */
+.office-envelope { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto 1fr; gap: var(--office-space-3) var(--office-space-3); width: min(100%, 18rem); aspect-ratio: 1.6; padding: 0.75rem 1rem; border-color: var(--office-color-ink); }
+.office-envelope-sender { display: grid; gap: var(--office-space-2); align-content: start; width: min(100%, 7rem); }
+.office-envelope-sender > .office-eyebrow { margin: 0; }
+.office-envelope-sender > span { display: block; height: 0.625rem; border-bottom: 1px solid var(--office-color-ink); }
+.office-envelope-stamp { display: grid; place-items: center; width: 2.25rem; aspect-ratio: 1; padding-bottom: 4%; border: 1px dashed var(--office-color-ink); font-family: var(--office-font-label); font-size: 1rem; font-weight: 500; letter-spacing: -0.05em; line-height: 1; }
+.office-envelope > address, .office-envelope > p { grid-column: 1 / -1; align-self: end; justify-self: end; margin: 0; width: fit-content; max-width: 100%; font-style: normal; }
 .office-card--olive { background: var(--office-color-olive); color: var(--office-color-ink); border-color: transparent; }
 .office-card--blue { background: var(--office-color-blue); color: var(--office-color-ink); border-color: transparent; }
 .office-card--night { border-color: transparent; }

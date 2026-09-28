@@ -49,7 +49,7 @@ export function TextField({ label, hint, error, id: suppliedId, className, requi
   const generatedId = useId();
   const id = suppliedId || generatedId;
   return <div className="office-field">
-    <label className="office-field__label" htmlFor={id}>{label}{required && <span className="office-field__required"> (obligatorio)</span>}</label>
+    <label className="office-field__label" htmlFor={id}>{label}{!required && <span className="office-field__optional"> (opcional)</span>}</label>
     <input {...props} id={id} required={required} className={classes("office-input", className)}
       aria-invalid={error ? true : props["aria-invalid"]}
       aria-describedby={describedBy(id, hint, error, props["aria-describedby"])} />
@@ -62,7 +62,7 @@ export function TextAreaField({ label, hint, error, id: suppliedId, className, r
   const generatedId = useId();
   const id = suppliedId || generatedId;
   return <div className="office-field">
-    <label className="office-field__label" htmlFor={id}>{label}{required && <span className="office-field__required"> (obligatorio)</span>}</label>
+    <label className="office-field__label" htmlFor={id}>{label}{!required && <span className="office-field__optional"> (opcional)</span>}</label>
     <textarea rows={4} {...props} id={id} required={required} className={classes("office-input", className)}
       aria-invalid={error ? true : props["aria-invalid"]}
       aria-describedby={describedBy(id, hint, error, props["aria-describedby"])} />
@@ -75,7 +75,7 @@ export function SelectField({ label, hint, error, id: suppliedId, className, req
   const generatedId = useId();
   const id = suppliedId || generatedId;
   return <div className="office-field">
-    <label className="office-field__label" htmlFor={id}>{label}{required && <span className="office-field__required"> (obligatorio)</span>}</label>
+    <label className="office-field__label" htmlFor={id}>{label}{!required && <span className="office-field__optional"> (opcional)</span>}</label>
     <select {...props} id={id} required={required} className={classes("office-input", className)}
       aria-invalid={error ? true : props["aria-invalid"]}
       aria-describedby={describedBy(id, hint, error, props["aria-describedby"])}>{children}</select>
@@ -117,6 +117,15 @@ export function PaperCard({ tone = "paper", className, ...props }:
   HTMLAttributes<HTMLElement> & { tone?: "paper" | "red" | "olive" | "blue" | "night" }) {
   return <article {...props} data-office-theme={tone === "night" ? "night" : "paper"}
     className={classes("office-card", "office-card--" + tone, className)} />;
+}
+
+/** Envelope front: sender lines top left, the stamp with the "L." of the signature top right, and the address (children) bottom right. */
+export function Envelope({ className, children, ...props }: HTMLAttributes<HTMLElement>) {
+  return <PaperCard {...props} className={classes("office-envelope", "office-surface", className)}>
+    <div className="office-envelope-sender" aria-hidden="true"><Eyebrow>Remitente</Eyebrow><span /><span /></div>
+    <span className="office-envelope-stamp" aria-hidden="true">L.</span>
+    {children}
+  </PaperCard>;
 }
 
 /** Native modal: focus containment, Escape, inert background and focus restoration. */

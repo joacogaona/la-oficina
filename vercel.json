@@ -1,0 +1,8 @@
+{
+  "redirects": [
+    { "source": "/condiciones", "destination": "/", "permanent": true },
+    { "source": "/condiciones/", "destination": "/", "permanent": true },
+    { "source": "/privacidad", "destination": "/", "permanent": true },
+    { "source": "/privacidad/", "destination": "/", "permanent": true }
+  ]
+}

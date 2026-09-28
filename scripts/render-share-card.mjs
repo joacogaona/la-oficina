@@ -8,28 +8,24 @@ try {
   await page.route('**/*', route => new URL(route.request().url()).origin === new URL(url).origin ? route.continue() : route.abort());
   await page.goto(url);
   await page.evaluate(() => document.fonts.ready);
+  // The card is the cover itself: red paper, the signature, the one-line description.
   await page.addStyleTag({ content: `
-    .site-header {min-height:100px;padding-inline:64px}.site-header nav,.hero-actions,.hero-bottom,.letter-composition figcaption{display:none}
-    .hero-grid {height:530px;padding:24px 64px 40px;gap:72px;grid-template-columns:1.4fr 1fr}
-    .hero-copy h1 {font-size:80px}.hero-copy>.office-eyebrow{margin-bottom:24px}.hero-description{font-size:22px;max-width:450px}
-    .letter-composition {max-width:325px;padding:0 16px 0}.letter-sheet{min-height:310px;padding:24px}
-    .letter-top{padding-bottom:16px;font-size:12px}.letter-mark{width:32px;height:38px;font-size:22px}
-    .letter-greeting{margin-top:16px!important;font-size:16px}.letter-message{font-size:33px;margin-block:16px 24px!important}
-    .letter-bottom{font-size:10px}.letter-envelope{min-height:140px;padding:24px;margin-top:-12px;gap:16px}
-    .letter-envelope .office-signature{font-size:16px}.envelope-note{font-size:11px}
+    .site > *:not(.cover) { display: none } .cover-top a { display: none }
+    .cover { box-sizing: border-box; height: 630px; padding: 56px 0 } .cover > .office-container { display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding-inline: 72px }
+    .cover-top { margin: 0; min-height: 0; font-size: 20px } .cover-title .office-signature { font-size: 100px } .cover-line { margin: 0; max-width: none; font-size: 32px }
   ` });
   await mkdir('public', { recursive: true });
   await page.screenshot({ path: 'public/og.png' });
+  // The icons are the Oficina's seal: the "L." of the signature, ink on the red of the cover, set in the page's own font.
   for (const [size, name] of [[64, 'favicon.png'], [180, 'apple-touch-icon.png']]) {
     await page.setViewportSize({ width: size, height: size });
     await page.evaluate(size => {
-      document.body.innerHTML = '';
-      const icon = document.createElement('div');
-      icon.textContent = 'L.';
-      Object.assign(icon.style, { width: size + 'px', height: size + 'px', boxSizing: 'border-box', display: 'grid', placeItems: 'center', color: '#f3f0e7', background: '#71312f', font: `${size * 0.62}px Inconsolata`, paddingBottom: size * 0.04 + 'px' });
-      document.body.style.minWidth = '0'; document.body.append(icon);
+      document.body.innerHTML = ''; document.body.style.minWidth = '0';
+      const icon = document.createElement('div'); icon.textContent = 'L.';
+      Object.assign(icon.style, { width: size + 'px', height: size + 'px', boxSizing: 'border-box', display: 'grid', placeItems: 'center', color: '#1c1c18', background: '#d2645b', font: `500 ${size * 0.62}px Inconsolata`, letterSpacing: '-0.05em', paddingBottom: size * 0.04 + 'px' });
+      document.body.append(icon);
     }, size);
     await page.screenshot({ path: 'public/' + name });
   }
-  console.log('Tarjeta 1200×630 e iconos generados desde la tipografía y composición de la web.');
+  console.log('Tarjeta 1200×630 generada desde la portada; favicon e ícono con la “L.” de la firma.');
 } finally { await browser.close(); }
