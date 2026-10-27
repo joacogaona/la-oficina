@@ -13,12 +13,51 @@ body { margin: 0; min-width: 320px; }
 .site-label, .cover-top, .site-footer { font-family: var(--office-font-label); font-size: var(--office-text-label); line-height: 1.4; letter-spacing: var(--office-tracking-label); text-transform: uppercase; }
 .site-label { margin: 0; font-weight: 400; }
 .cover { padding-block: var(--office-space-6) clamp(3.5rem, 9vh, 6.5rem); }
-.cover-top { display: flex; align-items: center; min-height: 3.5rem; margin-bottom: clamp(5rem, 20vh, 12rem); }
+.cover-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--office-space-2) var(--office-space-6); min-height: 3.5rem; margin-bottom: clamp(5rem, 20vh, 12rem); }
+.cover-top p { margin: 0; }
+/* The menu: three words in the label style, anchors to the sections, no bar and nothing fixed. */
+.cover-nav { display: flex; flex-wrap: wrap; gap: var(--office-space-4) var(--office-space-6); }
+.cover-nav a { padding-block: var(--office-space-2); text-decoration: none; }
+.cover-nav a:hover { text-decoration: underline; }
 .cover-title { margin: 0; font-weight: 400; line-height: 1; }
 .cover-title .office-signature { display: block; }
 .cover-line { max-width: 30rem; text-wrap: balance; margin-top: clamp(2rem, 5vh, 3.5rem); font-size: var(--office-text-lead); line-height: 1.4; }
 .page { display: grid; gap: var(--office-space-6); max-width: var(--office-width-reading); padding-block: clamp(3rem, 7vw, 5.5rem); }
 .manifiesto { font-size: var(--office-text-lead); line-height: 1.45; max-width: 34ch; }
+/* Paper blocks after the manifiesto: label on the left (11rem), body on the right, a rule on top. One column in mobile. */
+.block { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--office-space-4) var(--office-space-8); padding-block: clamp(2.5rem, 6vw, 4.5rem); border-top: 1px solid var(--office-rule); }
+.block-label { align-self: start; }
+.block-body { display: grid; gap: var(--office-space-6); max-width: var(--office-width-reading); }
+.block-lead { font-size: var(--office-text-lead); line-height: 1.45; max-width: 34ch; }
+.block-text { max-width: 62ch; }
+.block-body--wide { max-width: none; }
+.locales-layout { display: grid; gap: var(--office-space-8); grid-template-columns: minmax(0, 1fr); align-items: start; }
+/* The city in one ink: thin rules for the barrios, ink for the outline, the red of the cover where a local is, the owl standing on it. */
+.mapa-figure { margin: 0; max-width: 24rem; }
+.mapa { display: block; width: 100%; height: auto; }
+.mapa-barrio { fill: none; stroke: var(--office-rule); stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.mapa-barrio--local { fill: var(--office-color-red); stroke: var(--office-text); }
+.mapa-contorno { fill: none; stroke: var(--office-text); stroke-width: 1.25; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.mapa-punto { fill: var(--office-text); }
+.locales { list-style: none; margin: 0; padding: 0; display: grid; align-self: start; max-width: var(--office-width-reading); }
+.local { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: var(--office-space-1) var(--office-space-4); align-items: start; padding-block: var(--office-space-4); border-top: 1px solid var(--office-rule); }
+.local:last-child { border-bottom: 1px solid var(--office-rule); }
+.local-lechuza { width: 3rem; height: auto; }
+.local-body { display: grid; gap: var(--office-space-1); }
+.local-name { font-weight: 500; }
+.local-place { color: var(--office-text-muted); }
+.local-link { width: fit-content; margin-top: var(--office-space-2); }
+/* The form unfolds under the button: a native details, open or closed without JavaScript. */
+.subscription { max-width: var(--office-width-form); }
+.subscription-toggle { list-style: none; width: fit-content; }
+.subscription-toggle::-webkit-details-marker { display: none; }
+.subscription-panel { padding-top: var(--office-space-8); }
+.subscription-form, .subscription-result { display: grid; gap: var(--office-space-6); max-width: var(--office-width-form); }
+.subscription-fields { display: grid; gap: var(--office-space-6); margin: 0; padding: 0; border: 0; min-width: 0; }
+.subscription-row { display: grid; gap: var(--office-space-6); grid-template-columns: minmax(0, 1fr); }
+.subscription-honeypot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.subscription-result:focus { outline: none; }
+.subscription-actions { display: flex; flex-wrap: wrap; gap: var(--office-space-3) var(--office-space-6); align-items: center; }
 .letters { padding-block: clamp(3rem, 7vw, 5.5rem); }
 .letters-inner { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--office-space-8); justify-items: start; }
 .letters-lead { font-size: var(--office-text-lead); line-height: 1.45; }
@@ -26,6 +65,13 @@ body { margin: 0; min-width: 320px; }
 .postal > span:first-child { font-weight: 500; }
 .postal-pending { display: grid; gap: var(--office-space-2); max-width: 30ch; font-size: var(--office-text-label); line-height: 1.5; }
 .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--office-space-2) var(--office-space-8); padding-block: var(--office-space-6); border-top: 1px solid var(--office-rule); color: var(--office-text-muted); }
+@media (min-width: 681px) {
+  .block { grid-template-columns: 11rem minmax(0, 1fr); }
+  .subscription-row { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+}
+@media (min-width: 961px) {
+  .locales-layout { grid-template-columns: minmax(0, 24rem) minmax(16rem, 1fr); }
+}
 @media (max-width: 680px) {
   .cover-top { margin-bottom: clamp(3.5rem, 14vh, 6rem); }
   .site-footer { flex-direction: column; align-items: flex-start; }

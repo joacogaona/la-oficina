@@ -21,7 +21,11 @@
   "unexpectedRequests": [],
   "checks": [
     "postal address or explicit pending state",
-    "no form, mail link or products",
+    "shops listed without prices",
+    "map from city data with the owl on each shop and a directions link",
+    "menu anchors to existing sections",
+    "subscription form folded under its button: validation, city-only postal code, endpoint error kept, success with the Mercado Pago link, plain POST without JavaScript",
+    "no mail link or products",
     "canonical and share card metadata",
     "Organization JSON-LD",
     "pre-rendered page without JavaScript",

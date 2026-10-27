@@ -1,30 +1,34 @@
 # La Oficina de los Últimos Cuentos · web
 
-React + TypeScript + Vite + Tailwind. Una página de presencia: la firma, el manifiesto de la Oficina y la dirección postal. Todo contacto empieza por carta: no hay formulario, mail ni redes. Node 22.18 o superior, pnpm 8.9.2.
+React + TypeScript + Vite + Tailwind. Una página: la firma, el manifiesto de la Oficina, los locales donde se venden los cuentos, el formulario de suscripción mensual y la dirección postal. Sin mail público ni redes. Node 22.18 o superior, pnpm 8.9.2.
 
-Versión del 27-sep-2026. Reemplaza la web de consultas del 13-sep (siete recorridos, focos, buzón, encuentros, avisos por mail y Formspree) y las dos versiones intermedias del 26-sep (archivo de cuentos, bloques Cartas y Mensajes con formulario). El alcance está en el [plan de la web](../negocio/plan.md#web).
+Versión del 27-oct-2026: suma las secciones Dónde encontrarlos y Un cuento por mes (pedido de Joaquín) a la web de presencia del 27-sep-2026, que reemplazó la web de consultas del 13-sep (siete recorridos, focos, buzón, encuentros, avisos por mail y Formspree) y las dos versiones intermedias del 26-sep (archivo de cuentos, bloques Cartas y Mensajes con formulario). El alcance está en el [plan de la web](../negocio/plan.md#web).
 
 ## Qué hay
 
-- Portada roja con la firma y la frase "Cuentos por carta."; el manifiesto en papel (texto de Joaquín del 28-sep-2026, en tres párrafos); una segunda sección roja con la invitación "Si querés mandar un cuento, vender nuestros cuentos en tu local o hacernos una propuesta, mandanos una carta a:", la dirección postal escrita en el frente de un sobre de papel (líneas del remitente y estampilla con la “L.” de la firma) y la nota "Leemos todo lo que llega. Si dejás un mail o un teléfono en la carta, te contactamos."; pie con el nombre, la ciudad y "La Oficina existe."
-- Sin formulario, sin mail público, sin página de privacidad (la web no recolecta datos), sin sobres ni cuentos a la vista. Una sola familia en pantalla (Inconsolata).
+- Portada roja con la ciudad y un menú de tres palabras (Cafés, Suscripción, Cartas: anclas a las secciones, sin barra fija), la firma y la frase "Cuentos por carta."; el manifiesto en papel (texto de Joaquín del 28-sep-2026, en tres párrafos); dos bloques en papel con rótulo a la izquierda: "Dónde encontrarlos" (un mapa de la ciudad dibujado por la propia página desde [src/content/caba.ts](src/content/caba.ts), con los barrios en línea fina, el barrio de cada local en el rojo de la portada y la lechuza de la Oficina parada sobre el punto, sin teselas ni peticiones externas; al lado, la lista de `site.locales` con la lechuza chica, nombre, dirección, barrio y ciudad y el enlace "Cómo llegar" a Google Maps, que se abre solo al tocarlo; sin precio) y "Un cuento por mes" (la suscripción a domicilio: dos líneas con el precio, $20.000 por mes con envío incluido, y el alcance, solo Ciudad de Buenos Aires; el botón "Suscribirme" que despliega (un `details` nativo, funciona sin JavaScript) el formulario de [SubscriptionForm.tsx](src/features/suscripcion/SubscriptionForm.tsx) con nombre, mail, teléfono opcional, dirección, barrio, código postal y nota, honeypot, validación en el navegador que rechaza códigos postales fuera de la Ciudad, error del servicio sin simular éxito y confirmación persistente con el botón "Pagar en Mercado Pago"; sin JavaScript hace un POST común al mismo endpoint); una segunda sección roja con la invitación "Si querés mandar un cuento, vender nuestros cuentos en tu local o hacernos una propuesta, mandanos una carta a:", la dirección postal escrita en el frente de un sobre de papel (líneas del remitente y estampilla con la “L.” de la firma) y la nota "Leemos todo lo que llega. Si dejás un mail o un teléfono en la carta, te contactamos."; pie con el nombre, la ciudad y "La Oficina existe."
+- Sin mail público ni página de privacidad; el único dato que entra es el pedido de suscripción, que va al servicio de formularios y no se guarda en la web. Sin sobres ni cuentos a la vista; el único precio es el de la suscripción. Una sola familia en pantalla (Inconsolata).
 - Metadatos, tarjeta para compartir, favicon, robots y sitemap. La página se pre-renderiza en el build: `dist/index.html` trae el texto completo y datos estructurados de tipo Organization (nombre, ciudad, descripción, imágenes y la dirección postal cuando existe), y React solo hidrata. `vercel.json` redirige las rutas retiradas `/condiciones/` y `/privacidad/` a `/`.
 
 ## Contenido y conexiones
 
-Editar [src/content/site.ts](src/content/site.ts): nombre, ciudad y el manifiesto (un string por párrafo). No agregar cuentos, títulos, nombres de autores, precios, fechas, focos ni encuentros. Regla para lo que venga: lo digital sirve para encontrar a la Oficina; todo lo demás pasa en papel. Un encuentro futuro se anuncia con una línea (fecha y lugar), como un afiche, sin inscripción.
+Editar [src/content/site.ts](src/content/site.ts): nombre, ciudad, el manifiesto (un string por párrafo) y `locales` (un objeto por local confirmado: nombre, barrio escrito como en los barrios de la ciudad para que el mapa lo pinte, ciudad, dirección de calle cuando esté confirmada, `lat` y `lon` del local y, si existe, el enlace `mapa` de Google Maps; la lista vacía oculta la sección). No agregar cuentos, títulos, nombres de autores, precios, fechas ni encuentros. Regla para lo que venga: lo digital sirve para encontrar a la Oficina y para pedir la suscripción; todo lo demás pasa en papel. Un encuentro futuro se anuncia con una línea (fecha y lugar), como un afiche, sin inscripción.
 
 Copiar `.env.example` a `.env.local` para la configuración local. Los valores `VITE_` son públicos y se incorporan al compilar.
 
 | Variable | Uso y comportamiento actual |
 |---|---|
 | `VITE_POSTAL_ADDRESS` | Vacía: la página dice "Dirección pendiente: todavía no tenemos casilla de correo". Con líneas separadas por `\|` (casilla, sucursal, ciudad) muestra la dirección en la tarjeta roja. Nunca un domicilio particular |
+| `VITE_FORM_ENDPOINT` | Adónde manda el formulario de suscripción (POST JSON con `Accept: application/json`, y POST común sin JavaScript). Sin definir: el Formspree de la Oficina (`https://formspree.io/f/mredjdzd`, el formulario que ya existía en mayo). Vacío: la sección ofrece la suscripción por carta en vez del formulario. Cualquier servicio que acepte JSON sirve |
+| `VITE_SUBSCRIPTION_URL` | Link del plan de suscripción mensual creado en Mercado Pago ($20.000). Aparece como botón "Pagar en Mercado Pago" después de enviar el formulario. Vacío: la confirmación dice que el pago se coordina por mail |
 | `VITE_PUBLIC_SITE_URL` | Dominio público: `https://laoficinaexiste.com` (comprado el 27-sep-2026, DNS en Vercel). Genera canonical, URLs sociales, robots y sitemap. Debe coincidir con el dominio principal configurado en Vercel |
 
 Configurar también estas variables en el hosting al desplegar.
 
 Antes de publicar:
 
+- Crear en Mercado Pago el plan de suscripción mensual de $20.000 y cargar su link en Vercel como `VITE_SUBSCRIPTION_URL`; hasta entonces la web coordina el pago por mail.
+- Mandar un pedido de prueba desde la web desplegada y confirmar que llega al Formspree (y al mail asociado); si el formulario de Formspree está inactivo, la web muestra el error y ofrece la carta, nunca un éxito falso. Cargar cada pedido real en el sheet.
 - Contratar la casilla de correo (o el punto de recepción acordado) y cargar `VITE_POSTAL_ADDRESS`; definir quién retira las cartas y cómo se responde. Sin dirección, la web no se publica.
 - En Vercel, `laoficinaexiste.com` ya sirve producción (27-sep) y es el canonical. Falta que `www.laoficinaexiste.com` y `la-oficina-seven.vercel.app` redirijan a él; se configura en el panel de Vercel (Edit en cada dominio, Redirect to Another Domain, destino `laoficinaexiste.com`, 308, Save), no en `vercel.json`, por decisión de Joaquín del 28-sep. Decidir el plan de Vercel y, después de publicar, verificar el dominio en Search Console y enviar el sitemap.
 
@@ -49,6 +53,8 @@ Abrir la URL local indicada por Vite. `/` es la web; `/design-system/` es el mue
 pnpm check:design
 pnpm build
 ```
+
+El mapa sale de [scripts/build-map.mjs](scripts/build-map.mjs): lee el GeoJSON de barrios de Buenos Aires Data (CC BY 4.0, atribuido en el `desc` del SVG y acá), simplifica los polígonos y escribe `src/content/caba.ts` (15 KB); se corre a mano, solo si cambia la fuente. La lechuza es el dibujo de Joaquín ([design-system/references/10-lechuza.jpg](design-system/references/10-lechuza.jpg)) recortado sin fondo, en tinta, a 400 px de alto ([src/assets/lechuza.webp](src/assets/lechuza.webp)).
 
 `pnpm build` compila, pre-renderiza la página con [scripts/prerender.mjs](scripts/prerender.mjs) (entrada [src/entry-server.tsx](src/entry-server.tsx)) y agrega el JSON-LD. El servidor de desarrollo sirve la página sin pre-render; para ver el HTML final, `pnpm preview` después del build.
 
