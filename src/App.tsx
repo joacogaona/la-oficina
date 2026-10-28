@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { BrandSignature, Envelope } from "./design-system";
 import { site } from "./content/site";
 import { Mapa } from "./features/locales/Mapa";
@@ -82,5 +83,6 @@ export default function App() {
       </div></section>
     </main>
     <footer className="site-footer office-container"><span>{site.name} · {site.city}</span><span>La Oficina existe.</span></footer>
+    <Analytics />
   </div>;
 }
