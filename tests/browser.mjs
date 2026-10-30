@@ -5,13 +5,16 @@ const { chromium } = await import(process.env.OFFICE_PLAYWRIGHT_MODULE || 'playw
 const browser = await chromium.launch({ headless: true, executablePath: process.env.OFFICE_CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' });
 const url = process.env.OFFICE_PREVIEW_URL || 'http://localhost:5174';
 const endpoint = process.env.VITE_FORM_ENDPOINT ?? 'https://formspree.io/f/mredjdzd';
-const errors = [], unexpected = [], layouts = [], posted = [];
+const errors = [], unexpected = [], layouts = [], posted = [], vercel = [];
+// Vercel's analytics scripts live under /_vercel/ on the same origin and only exist once enabled in the project: the test serves them empty and records the requests.
+const vercelStub = route => { const { pathname } = new URL(route.request().url()); if (!pathname.startsWith('/_vercel/')) return false; vercel.push(pathname); route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }); return true; };
 let endpointStatus = 500;
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   page.on('pageerror', error => errors.push(error.message)); page.on('console', message => { if (message.type() === 'error' && message.location().url !== endpoint) errors.push(message.text()); });
   await page.route('**/*', route => {
     const request = route.request();
+    if (vercelStub(route)) return;
     if (new URL(request.url()).origin === new URL(url).origin) return route.continue();
     if (endpoint && request.url() === endpoint && request.method() === 'POST') { posted.push(request.postDataJSON()); return route.fulfill({ status: endpointStatus, contentType: 'application/json', body: endpointStatus === 200 ? '{"ok":true}' : '{"error":"mock"}' }); }
     unexpected.push(request.url()); return route.abort();
@@ -70,7 +73,7 @@ try {
   const agendaUrl = new URL('/agenda/', url).href;
   const agendaPage = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   agendaPage.on('pageerror', error => errors.push(error.message)); agendaPage.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
-  await agendaPage.route('**/*', route => { if (new URL(route.request().url()).origin === new URL(url).origin) return route.continue(); unexpected.push(route.request().url()); return route.abort(); });
+  await agendaPage.route('**/*', route => { if (vercelStub(route)) return; if (new URL(route.request().url()).origin === new URL(url).origin) return route.continue(); unexpected.push(route.request().url()); return route.abort(); });
   await agendaPage.goto(agendaUrl); await agendaPage.evaluate(() => document.fonts.ready);
   await agendaPage.getByRole('heading', { level: 1, name: 'Agenda' }).waitFor(); assert.equal(await agendaPage.locator('a.cover-home').getAttribute('href'), '/');
   const groups = agendaPage.locator('section.agenda-barrio'); const groupCount = await groups.count(); assert.ok(groupCount > 0);
@@ -83,6 +86,8 @@ try {
   // Every activity: a name (the public link when there is one) and, at most, one more line. No "Más información" rows.
   for (const item of await agendaPage.locator('.agenda-item').all()) { assert.equal(await item.locator('.agenda-nombre').count(), 1); assert.ok((await item.locator('p').count()) <= 2); }
   assert.equal(await agendaPage.getByText('Más información').count(), 0);
+  // Both pages ask for Vercel's Web Analytics and Speed Insights scripts (30-oct-2026), nothing else from outside.
+  for (const script of ['/_vercel/insights/script.js', '/_vercel/speed-insights/script.js']) assert.ok(vercel.filter(path => path === script).length >= 2, script);
   await barrioLinks.first().focus(); await agendaPage.keyboard.press('Enter'); await agendaPage.waitForFunction(() => location.hash.startsWith('#barrio-'));
   for (const link of await agendaPage.locator('a.agenda-link').all()) { assert.equal(await link.getAttribute('target'), '_blank'); assert.equal(await link.getAttribute('rel'), 'noreferrer'); assert.ok((await link.getAttribute('href')).startsWith('https://')); }
   assert.equal(await agendaPage.locator('main').getByText(/\$\s?\d/).count(), 0);
@@ -93,7 +98,7 @@ try {
   assert.equal(agendaData['@graph'][0]['@type'], 'WebPage'); assert.ok(agendaData['@graph'].slice(1).every(item => item['@type'] === 'Event' && item.location && item.startDate));
   // The build pre-renders the page: without JavaScript the whole page is still there.
   const noScript = await browser.newContext({ javaScriptEnabled: false }); const still = await noScript.newPage();
-  await still.route('**/*', route => new URL(route.request().url()).origin === new URL(url).origin ? route.continue() : route.abort());
+  await still.route('**/*', route => { if (vercelStub(route)) return; return new URL(route.request().url()).origin === new URL(url).origin ? route.continue() : route.abort(); });
   await still.goto(url); await still.getByRole('heading', { level: 1, name: 'La Oficina de los Últimos Cuentos' }).waitFor(); await still.getByText('Leemos todo lo que llega.').waitFor(); await still.locator('.local', { hasText: 'Towandas Café' }).waitFor(); await still.locator('svg.mapa image').first().waitFor({ state: 'attached' }); assert.equal(await still.locator('form.subscription-form[method="post"]').getAttribute('novalidate'), null);
   await still.goto(agendaUrl); await still.getByRole('heading', { level: 1, name: 'Agenda' }).waitFor(); assert.equal(await still.locator('section.agenda-barrio').count(), groupCount); await still.locator('.agenda-mapa a').first().waitFor({ state: 'attached' }); await noScript.close();
   await mkdir('validation/previews', { recursive: true });
