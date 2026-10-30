@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -5,13 +6,15 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "VITE_");
   const siteUrl = new URL(env.VITE_PUBLIC_SITE_URL || "https://laoficinaexiste.com");
   if (siteUrl.protocol !== "https:" || siteUrl.username || siteUrl.password || siteUrl.pathname !== "/" || siteUrl.search || siteUrl.hash) throw new Error("VITE_PUBLIC_SITE_URL debe ser el dominio público HTTPS, sin rutas ni parámetros.");
-  const pages = ["/"];
+  /** Public pages: the home page and the agenda (30-oct-2026). Each one is an HTML entry pre-rendered by scripts/prerender.mjs. */
+  const pages = ["/", "/agenda/"];
   return {
+    build: { rollupOptions: { input: { main: resolve("index.html"), agenda: resolve("agenda/index.html") } } },
     plugins: [react(), {
       name: "office-public-metadata",
       transformIndexHtml(html, context) {
         if (context.path.startsWith("/design-system/")) return html;
-        const pagePath = "/";
+        const pagePath = context.path.startsWith("/agenda/") ? "/agenda/" : "/";
         const title = html.match(/<title>(.*?)<\/title>/)?.[1] || "La Oficina de los Últimos Cuentos";
         const description = html.match(/name="description"\s+content="([^"]*)"/)?.[1] || "Cuentos por carta.";
         const url = new URL(pagePath, siteUrl).href;

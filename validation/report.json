@@ -5,6 +5,16 @@
       "scroll": 320
     },
     {
+      "page": "agenda",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "page": "agenda",
       "width": 375,
       "scroll": 375
     },
@@ -13,6 +23,16 @@
       "scroll": 768
     },
     {
+      "page": "agenda",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "page": "agenda",
       "width": 1440,
       "scroll": 1440
     }
@@ -23,7 +43,8 @@
     "postal address or explicit pending state",
     "shops listed without prices",
     "map from city data with the owl on each shop and a directions link",
-    "menu anchors to existing sections",
+    "menu anchors to existing sections and the agenda link",
+    "agenda: map links to barrio groups, no owls, keyboard, dates from today, no amounts, public links in a new tab, canonical and Events, without JavaScript, no overflow, 200% reflow",
     "subscription form folded under its button: validation, city-only postal code, endpoint error kept, success with the Mercado Pago link, plain POST without JavaScript",
     "no mail link or products",
     "canonical and share card metadata",

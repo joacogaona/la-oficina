@@ -65,16 +65,40 @@ body { margin: 0; min-width: 320px; }
 .postal > span:first-child { font-weight: 500; }
 .postal-pending { display: grid; gap: var(--office-space-2); max-width: 30ch; font-size: var(--office-text-label); line-height: 1.5; }
 .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--office-space-2) var(--office-space-8); padding-block: var(--office-space-6); border-top: 1px solid var(--office-rule); color: var(--office-text-muted); }
+/* Agenda (30-oct-2026): its own page with the cover, blocks and map of the home page. Confirmed dates by day, then everything by barrio. */
+.cover-home { padding-block: var(--office-space-2); text-decoration: none; }
+.cover-home:hover { text-decoration: underline; }
+.cover--agenda .cover-top { margin-bottom: clamp(3.5rem, 12vh, 7rem); }
+.agenda-title { margin: 0; font-family: var(--office-font-label); font-size: var(--office-text-signature); font-weight: 500; line-height: 1.06; letter-spacing: -0.055em; }
+.agenda-dias, .agenda-grupos { display: grid; gap: var(--office-space-8); align-self: start; }
+.agenda-dia, .agenda-barrio { display: grid; gap: var(--office-space-3); }
+.agenda-barrio { scroll-margin-top: var(--office-space-6); }
+.agenda-lista { list-style: none; margin: 0; padding: 0; display: grid; }
+.agenda-item { display: grid; gap: var(--office-space-1) var(--office-space-4); padding-block: var(--office-space-4); border-top: 1px solid var(--office-rule); }
+.agenda-item:last-child { border-bottom: 1px solid var(--office-rule); }
+.agenda-item--cita { grid-template-columns: 5.5rem minmax(0, 1fr); }
+.agenda-hora { font-variant-numeric: tabular-nums; }
+.agenda-body { display: grid; gap: var(--office-space-1); }
+.agenda-nombre { font-weight: 500; }
+.agenda-meta { color: var(--office-text-muted); }
+.agenda-link { width: fit-content; margin-top: var(--office-space-2); }
+/* Barrios with something are links to their group: ink on hover and focus, a thicker line for the keyboard. */
+.agenda-mapa a .mapa-barrio--local { transition: fill 160ms ease; }
+.agenda-mapa a:hover .mapa-barrio--local, .agenda-mapa a:focus-visible .mapa-barrio--local { fill: var(--office-text); }
+.agenda-mapa a:focus { outline: none; }
+.agenda-mapa a:focus-visible .mapa-barrio--local { stroke-width: 3; }
 @media (min-width: 681px) {
   .block { grid-template-columns: 11rem minmax(0, 1fr); }
   .subscription-row { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
 }
 @media (min-width: 961px) {
   .locales-layout { grid-template-columns: minmax(0, 24rem) minmax(16rem, 1fr); }
+  /* The agenda's list is long: the map stays in view while it scrolls. */
+  .agenda-mapa { position: sticky; top: var(--office-space-6); }
 }
 @media (max-width: 680px) {
   .cover-top { margin-bottom: clamp(3.5rem, 14vh, 6rem); }
   .site-footer { flex-direction: column; align-items: flex-start; }
   .office-envelope { row-gap: var(--office-space-6); }
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .agenda-mapa a .mapa-barrio--local { transition: none; } }

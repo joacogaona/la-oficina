@@ -1,4 +1,4 @@
-// Integration QA of the single page. All external requests are blocked; the only one the page makes is the subscription form's POST, mocked here.
+// Integration QA of the home page and the agenda. All external requests are blocked; the only one the page makes is the subscription form's POST, mocked here.
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 const { chromium } = await import(process.env.OFFICE_PLAYWRIGHT_MODULE || 'playwright');
@@ -33,9 +33,9 @@ try {
   assert.equal(await map.locator('.mapa-punto').count(), await page.locator('.local').count()); assert.equal(await map.locator('image').count(), 1); assert.equal(await map.locator('.mapa-barrio--local').count(), 1);
   assert.ok(await page.locator('img.local-lechuza').first().evaluate(img => img.complete && img.naturalWidth > 0));
   const directions = page.locator('a.local-link').first(); assert.equal(await directions.getAttribute('target'), '_blank'); assert.ok((await directions.getAttribute('href')).startsWith('https://maps.google.com/'));
-  // The menu: three words in the cover, each an anchor to a section that exists.
-  for (const link of await page.locator('nav.cover-nav a').all()) { const href = await link.getAttribute('href'); assert.ok(href.startsWith('#')); assert.equal(await page.locator(href).count(), 1); }
-  assert.deepEqual(await page.locator('nav.cover-nav a').allTextContents(), ['Cafés', 'Suscripción', 'Cartas']);
+  // The menu: four words in the cover, three anchors to sections that exist and the agenda's own page.
+  for (const link of await page.locator('nav.cover-nav a').all()) { const href = await link.getAttribute('href'); if (href === '/agenda/') continue; assert.ok(href.startsWith('#')); assert.equal(await page.locator(href).count(), 1); }
+  assert.deepEqual(await page.locator('nav.cover-nav a').allTextContents(), ['Cafés', 'Suscripción', 'Cartas', 'Agenda']);
   // The subscription form unfolds under its button; client validation keeps values and focuses the first missing field; the endpoint's errors are shown, never a fake success.
   const details = page.locator('details.subscription'); await details.waitFor(); assert.equal(await details.getAttribute('open'), null);
   await details.locator('> summary', { hasText: 'Suscribirme' }).click(); await page.locator('details.subscription[open]').waitFor();
@@ -65,16 +65,45 @@ try {
   // Structured data says only what the page says, with the canonical URL.
   const organization = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent());
   assert.equal(organization['@type'], 'Organization'); assert.equal(organization.name, 'La Oficina de los Últimos Cuentos'); assert.equal(organization.url, await page.locator('link[rel="canonical"]').getAttribute('href'));
+  // The agenda (30-oct-2026): its own pre-rendered page from src/content/agenda.ts. Confirmed dates by day from today in Buenos Aires, everything by barrio;
+  // the map's red barrios are links to their group, without owls (the owl marks the shops). No amounts, public links in another tab, its own canonical and Events.
+  const agendaUrl = new URL('/agenda/', url).href;
+  const agendaPage = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  agendaPage.on('pageerror', error => errors.push(error.message)); agendaPage.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+  await agendaPage.route('**/*', route => { if (new URL(route.request().url()).origin === new URL(url).origin) return route.continue(); unexpected.push(route.request().url()); return route.abort(); });
+  await agendaPage.goto(agendaUrl); await agendaPage.evaluate(() => document.fonts.ready);
+  await agendaPage.getByRole('heading', { level: 1, name: 'Agenda' }).waitFor(); assert.equal(await agendaPage.locator('a.cover-home').getAttribute('href'), '/');
+  const groups = agendaPage.locator('section.agenda-barrio'); const groupCount = await groups.count(); assert.ok(groupCount > 0);
+  const barrioLinks = agendaPage.locator('.agenda-mapa a'); assert.equal(await barrioLinks.count(), groupCount); assert.equal(await agendaPage.locator('.agenda-mapa .mapa-barrio--local').count(), groupCount);
+  for (const link of await barrioLinks.all()) { const href = await link.getAttribute('href'); assert.ok(href.startsWith('#barrio-')); assert.equal(await agendaPage.locator(href).count(), 1); }
+  assert.equal(await agendaPage.locator('.agenda-mapa image').count(), 0);
+  await barrioLinks.first().focus(); await agendaPage.keyboard.press('Enter'); await agendaPage.waitForFunction(() => location.hash.startsWith('#barrio-'));
+  for (const link of await agendaPage.locator('a.agenda-link').all()) { assert.equal(await link.getAttribute('target'), '_blank'); assert.equal(await link.getAttribute('rel'), 'noreferrer'); assert.ok((await link.getAttribute('href')).startsWith('https://')); }
+  assert.equal(await agendaPage.locator('main').getByText(/\$\s?\d/).count(), 0);
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Argentina/Buenos_Aires', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  for (const id of await agendaPage.locator('section.agenda-dia h3').evaluateAll(headings => headings.map(heading => heading.id))) assert.ok(id.slice(4) >= today, id);
+  assert.equal(await agendaPage.locator('link[rel="canonical"]').getAttribute('href'), new URL('/agenda/', await page.locator('link[rel="canonical"]').getAttribute('href')).href);
+  const agendaData = JSON.parse(await agendaPage.locator('script[type="application/ld+json"]').textContent());
+  assert.equal(agendaData['@graph'][0]['@type'], 'WebPage'); assert.ok(agendaData['@graph'].slice(1).every(item => item['@type'] === 'Event' && item.location && item.startDate));
   // The build pre-renders the page: without JavaScript the whole page is still there.
   const noScript = await browser.newContext({ javaScriptEnabled: false }); const still = await noScript.newPage();
   await still.route('**/*', route => new URL(route.request().url()).origin === new URL(url).origin ? route.continue() : route.abort());
-  await still.goto(url); await still.getByRole('heading', { level: 1, name: 'La Oficina de los Últimos Cuentos' }).waitFor(); await still.getByText('Leemos todo lo que llega.').waitFor(); await still.locator('.local', { hasText: 'Towandas Café' }).waitFor(); await still.locator('svg.mapa image').first().waitFor({ state: 'attached' }); assert.equal(await still.locator('form.subscription-form[method="post"]').getAttribute('novalidate'), null); await noScript.close();
+  await still.goto(url); await still.getByRole('heading', { level: 1, name: 'La Oficina de los Últimos Cuentos' }).waitFor(); await still.getByText('Leemos todo lo que llega.').waitFor(); await still.locator('.local', { hasText: 'Towandas Café' }).waitFor(); await still.locator('svg.mapa image').first().waitFor({ state: 'attached' }); assert.equal(await still.locator('form.subscription-form[method="post"]').getAttribute('novalidate'), null);
+  await still.goto(agendaUrl); await still.getByRole('heading', { level: 1, name: 'Agenda' }).waitFor(); assert.equal(await still.locator('section.agenda-barrio').count(), groupCount); await still.locator('.agenda-mapa a').first().waitFor({ state: 'attached' }); await noScript.close();
   await mkdir('validation/previews', { recursive: true });
   for (const width of [320, 375, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     const layout = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth }));
     layouts.push(layout); assert.ok(layout.scroll <= width, JSON.stringify(layout));
+    await agendaPage.setViewportSize({ width, height: 900 });
+    const agendaLayout = await agendaPage.evaluate(() => ({ page: 'agenda', width: innerWidth, scroll: document.documentElement.scrollWidth }));
+    layouts.push(agendaLayout); assert.ok(agendaLayout.scroll <= width, JSON.stringify(agendaLayout));
   }
+  await agendaPage.evaluate(() => { location.hash = ''; scrollTo(0, 0); });
+  await agendaPage.setViewportSize({ width: 1440, height: 1000 }); await agendaPage.screenshot({ path: 'validation/previews/agenda-escritorio.png' }); await agendaPage.screenshot({ path: 'validation/previews/agenda-completa.png', fullPage: true });
+  await agendaPage.setViewportSize({ width: 375, height: 900 }); await agendaPage.screenshot({ path: 'validation/previews/agenda-celular.png' });
+  await agendaPage.setViewportSize({ width: 1440, height: 1000 }); await agendaPage.addStyleTag({ content: 'html {font-size:200% !important}' });
+  assert.ok(await agendaPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.screenshot({ path: 'validation/previews/escritorio.png' });
   await page.screenshot({ path: 'validation/previews/pagina-completa.png', fullPage: true });
@@ -86,6 +115,6 @@ try {
   await page.setViewportSize({ width: 1440, height: 1000 }); await page.addStyleTag({ content: 'html {font-size:200% !important}' });
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   assert.deepEqual(errors, []); assert.deepEqual(unexpected, []);
-  const report = { layouts, runtimeErrors: errors, unexpectedRequests: unexpected, checks: ['postal address or explicit pending state', 'shops listed without prices', 'map from city data with the owl on each shop and a directions link', 'menu anchors to existing sections', 'subscription form folded under its button: validation, city-only postal code, endpoint error kept, success with the Mercado Pago link, plain POST without JavaScript', 'no mail link or products', 'canonical and share card metadata', 'Organization JSON-LD', 'pre-rendered page without JavaScript', 'no console errors (hydration)', 'no horizontal overflow at 320 to 1440', 'reduced motion', '200% text reflow'] };
+  const report = { layouts, runtimeErrors: errors, unexpectedRequests: unexpected, checks: ['postal address or explicit pending state', 'shops listed without prices', 'map from city data with the owl on each shop and a directions link', 'menu anchors to existing sections and the agenda link', 'agenda: map links to barrio groups, no owls, keyboard, dates from today, no amounts, public links in a new tab, canonical and Events, without JavaScript, no overflow, 200% reflow', 'subscription form folded under its button: validation, city-only postal code, endpoint error kept, success with the Mercado Pago link, plain POST without JavaScript', 'no mail link or products', 'canonical and share card metadata', 'Organization JSON-LD', 'pre-rendered page without JavaScript', 'no console errors (hydration)', 'no horizontal overflow at 320 to 1440', 'reduced motion', '200% text reflow'] };
   await writeFile('validation/report.json', JSON.stringify(report, null, 2)); console.log(JSON.stringify(report, null, 2));
 } finally { await browser.close(); }

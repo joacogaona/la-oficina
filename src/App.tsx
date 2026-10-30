@@ -12,6 +12,7 @@ function Cover() {
         {site.locales.length > 0 && <a href="#cafes">Cafés</a>}
         <a href="#suscripcion">Suscripción</a>
         <a href="#cartas">Cartas</a>
+        <a href="/agenda/">Agenda</a>
       </nav>
     </div>
     <h1 className="cover-title"><BrandSignature className="office-signature--display" /></h1>
