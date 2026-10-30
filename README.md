@@ -54,7 +54,7 @@ pnpm check:design
 pnpm build
 ```
 
-El mapa sale de [scripts/build-map.mjs](scripts/build-map.mjs): lee el GeoJSON de barrios de Buenos Aires Data (CC BY 4.0, atribuido en el `desc` del SVG y acá), simplifica los polígonos y escribe `src/content/caba.ts` (15 KB); se corre a mano, solo si cambia la fuente. La lechuza es el dibujo de Joaquín ([design-system/references/10-lechuza.jpg](design-system/references/10-lechuza.jpg)) recortado sin fondo, en tinta, a 400 px de alto ([src/assets/lechuza.webp](src/assets/lechuza.webp)).
+El mapa sale de [scripts/build-map.mjs](scripts/build-map.mjs): lee el GeoJSON de barrios de Buenos Aires Data (CC BY 4.0, atribuido en el `desc` del SVG y acá), simplifica los polígonos y escribe `src/content/caba.ts` (15 KB); se corre a mano, solo si cambia la fuente. La lechuza es el dibujo de Joaquín ([design-system/references/10-lechuza.jpg](design-system/references/10-lechuza.jpg)) recortado sin fondo, en tinta, a 400 px de alto ([src/assets/lechuza.webp](src/assets/lechuza.webp)). Cada local tiene su punto en el mapa; los locales a menos del ancho de la lechuza (90 unidades del viewBox, unas 18 cuadras) comparten una lechuza parada entre sus puntos, porque dos lechuzas a tres cuadras se dibujan una sobre la otra.
 
 `pnpm build` compila, pre-renderiza la página con [scripts/prerender.mjs](scripts/prerender.mjs) (entrada [src/entry-server.tsx](src/entry-server.tsx)) y agrega el JSON-LD. El servidor de desarrollo sirve la página sin pre-render; para ver el HTML final, `pnpm preview` después del build.
 

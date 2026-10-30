@@ -26,6 +26,7 @@ export const site = {
   /** Shops that sell the cuentos, in the order they joined. Only shops with the agreement in place (decisiones, fila Canales); an empty list hides the section. */
   locales: [
     { nombre: "Towandas Café", barrio: "Villa Urquiza", ciudad: "Buenos Aires", direccion: "Quesada 4982", lat: -34.5675666, lon: -58.4883118, mapa: "https://maps.google.com/?cid=9051435198881607600" },
+    { nombre: "Cero Café de Origen", barrio: "Villa Urquiza", ciudad: "Buenos Aires", direccion: "Av. Congreso 5080", lat: -34.5697631, lon: -58.4899585, mapa: "https://maps.google.com/?cid=7839819865668560653" },
   ] as Local[],
   /** The monthly subscription: price as shown (decisiones, fila Suscripción) and the Mercado Pago subscription link Joaquín generates; empty link: the page says payment is arranged by mail. */
   suscripcion: {

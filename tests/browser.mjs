@@ -26,9 +26,11 @@ try {
   assert.equal(await page.getByText(/Cuento Nº|Archivo/).count(), 0); await page.getByText('$20.000 por mes, envío incluido.').waitFor();
   // The shops that sell the cuentos, as listed in site.locales; a name and a neighbourhood each, no prices.
   await page.locator('.local', { hasText: 'Towandas Café' }).waitFor(); await page.locator('.local', { hasText: 'Quesada 4982' }).waitFor();
+  await page.locator('.local', { hasText: 'Cero Café de Origen' }).waitFor(); await page.locator('.local', { hasText: 'Av. Congreso 5080' }).waitFor();
   // The map is drawn from the city's own data: one shaded barrio and one owl per local, the directions link opens Google Maps only on request.
   const map = page.locator('svg.mapa'); await map.waitFor();
-  assert.equal(await map.locator('image').count(), await page.locator('.local').count()); assert.equal(await map.locator('.mapa-barrio--local').count(), 1);
+  // A dot per local; the two locals are three blocks apart in the same barrio, so they share one owl and one shaded barrio.
+  assert.equal(await map.locator('.mapa-punto').count(), await page.locator('.local').count()); assert.equal(await map.locator('image').count(), 1); assert.equal(await map.locator('.mapa-barrio--local').count(), 1);
   assert.ok(await page.locator('img.local-lechuza').first().evaluate(img => img.complete && img.naturalWidth > 0));
   const directions = page.locator('a.local-link').first(); assert.equal(await directions.getAttribute('target'), '_blank'); assert.ok((await directions.getAttribute('href')).startsWith('https://maps.google.com/'));
   // The menu: three words in the cover, each an anchor to a section that exists.
@@ -66,7 +68,7 @@ try {
   // The build pre-renders the page: without JavaScript the whole page is still there.
   const noScript = await browser.newContext({ javaScriptEnabled: false }); const still = await noScript.newPage();
   await still.route('**/*', route => new URL(route.request().url()).origin === new URL(url).origin ? route.continue() : route.abort());
-  await still.goto(url); await still.getByRole('heading', { level: 1, name: 'La Oficina de los Últimos Cuentos' }).waitFor(); await still.getByText('Leemos todo lo que llega.').waitFor(); await still.locator('.local', { hasText: 'Towandas Café' }).waitFor(); await still.locator('svg.mapa image').waitFor({ state: 'attached' }); assert.equal(await still.locator('form.subscription-form[method="post"]').getAttribute('novalidate'), null); await noScript.close();
+  await still.goto(url); await still.getByRole('heading', { level: 1, name: 'La Oficina de los Últimos Cuentos' }).waitFor(); await still.getByText('Leemos todo lo que llega.').waitFor(); await still.locator('.local', { hasText: 'Towandas Café' }).waitFor(); await still.locator('svg.mapa image').first().waitFor({ state: 'attached' }); assert.equal(await still.locator('form.subscription-form[method="post"]').getAttribute('novalidate'), null); await noScript.close();
   await mkdir('validation/previews', { recursive: true });
   for (const width of [320, 375, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
