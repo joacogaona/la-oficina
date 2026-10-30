@@ -1,6 +1,7 @@
 // Builds src/content/agenda.ts from the agenda research in ../agenda/data (the LODLUC workspace, outside this repo).
 // Only rows with decision "sí" reach the site, and only their public fields: no notes, no organisers' contacts beyond the public link,
-// no amounts (entry is "Gratis", "Pago", "A la gorra"...) and no street address for classes given at home. Run it by hand after curating:
+// no amounts (entry is "Gratis", "Pago", "A la gorra"...) and no street address for classes given at home. Only what is open now reaches the site:
+// a row whose enrollment is closed is "cerrado" in the data and stays out until it reopens. Run it by hand after curating:
 //   node scripts/build-agenda.mjs
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -38,13 +39,17 @@ const capital = text => text ? text[0].toUpperCase() + text.slice(1) : text;
 
 const ciclo = {
   "ciclo de lectura": "Ciclo de lectura", "ciclo de poesía": "Ciclo de poesía", "club de lectura": "Club de lectura", "open mic": "Micrófono abierto",
-  "presentaciones": "Presentaciones y charlas", "slam": "Slam de poesía", "conversaciones": "Conversaciones", "varieté": "Varieté de poesía",
+  "presentaciones": "Presentaciones", "slam": "Slam de poesía", "conversaciones": "Conversaciones", "varieté": "Varieté",
   "lectura abierta": "Lectura abierta", "escritura en vivo": "Taller abierto",
 };
+/** One short label per kind of class, from the research columns; a row's tipo_publico (for instance "Club de lectura") wins. */
+const tallerDisciplina = { "lectura": "Taller de lectura", "poesía": "Taller de poesía", "narrativa": "Taller de narrativa", "escritura creativa": "Taller de escritura", "crónica y no ficción": "Taller de no ficción" };
 const tallerTipo = (tipo, disciplina) => {
-  if (plain(tipo) === "clinica") return "Clínica de obra";
-  const base = capital(tipo || "taller");
-  return disciplina ? `${base} de ${disciplina}` : base;
+  const base = plain(tipo || "taller");
+  if (base === "clinica") return "Clínica de obra";
+  if (base === "seminario") return "Seminario";
+  if (base === "curso") return "Curso";
+  return tallerDisciplina[disciplina] || "Taller";
 };
 /** The public link: the first website in the field, otherwise the first Instagram account ("@cuenta" or "cuenta"). */
 const link = value => {

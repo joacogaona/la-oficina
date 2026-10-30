@@ -77,6 +77,12 @@ try {
   const barrioLinks = agendaPage.locator('.agenda-mapa a'); assert.equal(await barrioLinks.count(), groupCount); assert.equal(await agendaPage.locator('.agenda-mapa .mapa-barrio--local').count(), groupCount);
   for (const link of await barrioLinks.all()) { const href = await link.getAttribute('href'); assert.ok(href.startsWith('#barrio-')); assert.equal(await agendaPage.locator(href).count(), 1); }
   assert.equal(await agendaPage.locator('.agenda-mapa image').count(), 0);
+  // Under the map, the index: one link per barrio with activities, to the same groups (the way in from a phone).
+  const indexLinks = agendaPage.locator('.agenda-indice a'); assert.equal(await indexLinks.count(), groupCount);
+  for (const link of await indexLinks.all()) { const href = await link.getAttribute('href'); assert.ok(href.startsWith('#barrio-')); assert.equal(await agendaPage.locator(href).count(), 1); }
+  // Every activity: a name (the public link when there is one) and, at most, one more line. No "Más información" rows.
+  for (const item of await agendaPage.locator('.agenda-item').all()) { assert.equal(await item.locator('.agenda-nombre').count(), 1); assert.ok((await item.locator('p').count()) <= 2); }
+  assert.equal(await agendaPage.getByText('Más información').count(), 0);
   await barrioLinks.first().focus(); await agendaPage.keyboard.press('Enter'); await agendaPage.waitForFunction(() => location.hash.startsWith('#barrio-'));
   for (const link of await agendaPage.locator('a.agenda-link').all()) { assert.equal(await link.getAttribute('target'), '_blank'); assert.equal(await link.getAttribute('rel'), 'noreferrer'); assert.ok((await link.getAttribute('href')).startsWith('https://')); }
   assert.equal(await agendaPage.locator('main').getByText(/\$\s?\d/).count(), 0);
@@ -99,9 +105,9 @@ try {
     const agendaLayout = await agendaPage.evaluate(() => ({ page: 'agenda', width: innerWidth, scroll: document.documentElement.scrollWidth }));
     layouts.push(agendaLayout); assert.ok(agendaLayout.scroll <= width, JSON.stringify(agendaLayout));
   }
-  await agendaPage.evaluate(() => { location.hash = ''; scrollTo(0, 0); });
+  await agendaPage.evaluate(() => { location.hash = ''; scrollTo({ top: 0, behavior: 'instant' }); });
   await agendaPage.setViewportSize({ width: 1440, height: 1000 }); await agendaPage.screenshot({ path: 'validation/previews/agenda-escritorio.png' }); await agendaPage.screenshot({ path: 'validation/previews/agenda-completa.png', fullPage: true });
-  await agendaPage.setViewportSize({ width: 375, height: 900 }); await agendaPage.screenshot({ path: 'validation/previews/agenda-celular.png' });
+  await agendaPage.setViewportSize({ width: 375, height: 900 }); await agendaPage.evaluate(() => scrollTo({ top: 0, behavior: 'instant' })); await agendaPage.screenshot({ path: 'validation/previews/agenda-celular.png' });
   await agendaPage.setViewportSize({ width: 1440, height: 1000 }); await agendaPage.addStyleTag({ content: 'html {font-size:200% !important}' });
   assert.ok(await agendaPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   await page.setViewportSize({ width: 1440, height: 1000 });

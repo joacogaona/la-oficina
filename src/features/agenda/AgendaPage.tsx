@@ -26,40 +26,41 @@ const grupos = [...agenda.actividades.reduce((porBarrio, actividad) => {
   return porBarrio;
 }, new Map<string, Actividad[]>()).values()].map(actividades => ({ nombre: actividades[0].barrio, actividades }));
 
-function MasInformacion({ actividad }: { actividad: Actividad }) {
-  if (!actividad.enlace) return null;
-  return <a className="agenda-link" href={actividad.enlace} target="_blank" rel="noreferrer">Más información<span className="office-sr-only"> sobre {actividad.nombre} (abre en otra pestaña)</span></a>;
+/** The kind is a tag after the name, unless the name already says it ("Club de lectura Por Qué Leer"). */
+const tipoVisible = (actividad: Actividad) => plain(actividad.nombre).includes(plain(actividad.tipo)) ? undefined : actividad.tipo;
+const lugarConDireccion = (actividad: Actividad) => [actividad.lugar, actividad.direccion].filter(Boolean).join(", ");
+const separar = (partes: (string | undefined)[]) => partes.filter(Boolean).join(" · ");
+
+/** The name is the public link, opened in another tab; without a link, plain text. */
+function Nombre({ actividad }: { actividad: Actividad }) {
+  if (!actividad.enlace) return <span className="agenda-nombre">{actividad.nombre}</span>;
+  return <a className="agenda-link agenda-nombre" href={actividad.enlace} target="_blank" rel="noreferrer">{actividad.nombre}<span className="office-sr-only"> (abre en otra pestaña)</span></a>;
 }
 
-const donde = (actividad: Actividad) => [actividad.lugar, actividad.direccion, actividad.barrio].filter(Boolean).join(", ");
+/** Two lines per activity: the name with its kind, then one muted line with the rest. */
+function Cuerpo({ actividad, meta }: { actividad: Actividad; meta: string }) {
+  const tipo = tipoVisible(actividad);
+  return <div className="agenda-body">
+    <p className="agenda-linea"><Nombre actividad={actividad} />{tipo && <span className="agenda-tipo">{tipo}</span>}</p>
+    {meta && <p className="agenda-meta">{meta}</p>}
+  </div>;
+}
 
-/** One confirmed date: the hour, what it is and where. */
+/** One confirmed date: the hour in its column; where, how to get in and who gives it. */
 function CitaItem({ cita }: { cita: Cita }) {
   const { actividad } = cita;
+  const donde = [lugarConDireccion(actividad), actividad.barrio].filter(Boolean).join(", ");
+  const meta = separar([cita.hora ? undefined : "Hora a confirmar", donde, actividad.entrada, actividad.quien && `con ${actividad.quien}`]);
   return <li className="agenda-item agenda-item--cita">
-    <span className="agenda-hora">{cita.hora ?? "Hora a confirmar"}</span>
-    <div className="agenda-body">
-      <span className="agenda-nombre">{actividad.nombre}</span>
-      <span className="agenda-tipo">{actividad.tipo}</span>
-      <span className="agenda-meta">{donde(actividad)}</span>
-      {actividad.entrada && <span className="agenda-meta">{actividad.entrada}</span>}
-      <MasInformacion actividad={actividad} />
-    </div>
+    <span className="agenda-hora">{cita.hora ?? ""}</span>
+    <Cuerpo actividad={actividad} meta={meta} />
   </li>;
 }
 
-/** A cycle or a class in its barrio: when it happens as a sentence, who gives it if it is a class, where and how to get in. */
+/** A cycle or a class in its barrio: when, where, how to get in and who gives it. */
 function ActividadItem({ actividad }: { actividad: Actividad }) {
-  return <li className="agenda-item">
-    <div className="agenda-body">
-      <span className="agenda-nombre">{actividad.nombre}</span>
-      <span className="agenda-tipo">{actividad.tipo}{actividad.quien ? `, con ${actividad.quien}` : ""}</span>
-      <span>{actividad.cuando}</span>
-      {(actividad.lugar || actividad.direccion) && <span className="agenda-meta">{[actividad.lugar, actividad.direccion].filter(Boolean).join(", ")}</span>}
-      {actividad.entrada && <span className="agenda-meta">{actividad.entrada}</span>}
-      <MasInformacion actividad={actividad} />
-    </div>
-  </li>;
+  const meta = separar([actividad.cuando, lugarConDireccion(actividad), actividad.entrada, actividad.quien && `con ${actividad.quien}`]);
+  return <li className="agenda-item"><Cuerpo actividad={actividad} meta={meta} /></li>;
 }
 
 function Fechas({ desde, hoy }: { desde: string; hoy: string | null }) {
@@ -75,7 +76,7 @@ function Fechas({ desde, hoy }: { desde: string; hoy: string | null }) {
   if (dias.length === 0) return <p className="block-text">No tenemos fechas confirmadas para las próximas dos semanas. Abajo están todos los ciclos y talleres, por barrio.</p>;
   return <div className="agenda-dias">
     {dias.map(dia => <section key={dia} className="agenda-dia" aria-labelledby={`dia-${dia}`}>
-      <h3 id={`dia-${dia}`} className="site-label">{titulo(dia)}</h3>
+      <h3 id={`dia-${dia}`} className="agenda-titulo office-signature">{titulo(dia)}</h3>
       <ul className="agenda-lista">{proximas.filter(cita => cita.dia === dia).map(cita => <CitaItem key={`${cita.actividad.id} ${cita.dia} ${cita.hora ?? ""}`} cita={cita} />)}</ul>
     </section>)}
   </div>;
@@ -104,7 +105,7 @@ export function AgendaPage() {
     <main id="contenido" tabIndex={-1}>
       <div className="office-container"><div className="page">
         <p className="manifiesto">Hay una ciudad que todavía escribe en papel y lee en voz alta. Esta es su agenda.</p>
-        <p className="block-text">La armamos con lo que publica cada ciclo, taller o espacio, y la revisamos a mano. Antes de ir, confirmá con quien organiza. Revisada el {conAnio(agenda.revisado)}.</p>
+        <p className="block-text">Entra lo que está abierto hoy: ciclos a los que se puede ir y talleres en los que se puede anotar. La armamos con lo que publica cada uno y la revisamos a mano; antes de ir, confirmá con quien organiza. Revisada el {conAnio(agenda.revisado)}.</p>
       </div></div>
       <section id="fechas" className="block office-container" aria-labelledby="fechas-title">
         <h2 id="fechas-title" className="site-label block-label">Próximas fechas</h2>
@@ -116,10 +117,15 @@ export function AgendaPage() {
         <h2 id="barrios-title" className="site-label block-label">Por barrio</h2>
         <div className="block-body block-body--wide">
           <div className="locales-layout agenda-barrios">
-            <AgendaMapa barrios={grupos.map(grupo => ({ nombre: grupo.nombre, cantidad: grupo.actividades.length }))} />
+            <div className="agenda-lado">
+              <AgendaMapa barrios={grupos.map(grupo => ({ nombre: grupo.nombre, cantidad: grupo.actividades.length }))} />
+              <nav className="agenda-indice" aria-label="Barrios con actividades">
+                <ul>{grupos.map(grupo => <li key={grupo.nombre}><a href={`#${barrioId(grupo.nombre)}`}>{grupo.nombre}<span className="agenda-indice-n"> {grupo.actividades.length}</span></a></li>)}</ul>
+              </nav>
+            </div>
             <div className="agenda-grupos">
               {grupos.map(grupo => <section key={grupo.nombre} id={barrioId(grupo.nombre)} className="agenda-barrio" aria-labelledby={`${barrioId(grupo.nombre)}-title`}>
-                <h3 id={`${barrioId(grupo.nombre)}-title`} className="site-label">{grupo.nombre}</h3>
+                <h3 id={`${barrioId(grupo.nombre)}-title`} className="agenda-titulo office-signature">{grupo.nombre}</h3>
                 <ul className="agenda-lista">{grupo.actividades.map(actividad => <ActividadItem key={actividad.id} actividad={actividad} />)}</ul>
               </section>)}
             </div>
