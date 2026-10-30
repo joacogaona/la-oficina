@@ -76,6 +76,10 @@ try {
   await agendaPage.route('**/*', route => { if (vercelStub(route)) return; if (new URL(route.request().url()).origin === new URL(url).origin) return route.continue(); unexpected.push(route.request().url()); return route.abort(); });
   await agendaPage.goto(agendaUrl); await agendaPage.evaluate(() => document.fonts.ready);
   await agendaPage.getByRole('heading', { level: 1, name: 'Agenda' }).waitFor(); assert.equal(await agendaPage.locator('a.cover-home').getAttribute('href'), '/');
+  // The open mics first (30-oct-2026, night): the menu's first word leads there and each one is listed with its name; the other anchors exist.
+  assert.deepEqual(await agendaPage.locator('nav.cover-nav a').allTextContents(), ['Micrófonos', 'Fechas', 'Barrios', 'Cartas']);
+  for (const link of await agendaPage.locator('nav.cover-nav a').all()) { const href = await link.getAttribute('href'); if (href.startsWith('#')) assert.equal(await agendaPage.locator(href).count(), 1); }
+  assert.ok(await agendaPage.locator('#microfonos .agenda-item .agenda-nombre').count() >= 1);
   const groups = agendaPage.locator('section.agenda-barrio'); const groupCount = await groups.count(); assert.ok(groupCount > 0);
   const barrioLinks = agendaPage.locator('.agenda-mapa a'); assert.equal(await barrioLinks.count(), groupCount); assert.equal(await agendaPage.locator('.agenda-mapa .mapa-barrio--local').count(), groupCount);
   for (const link of await barrioLinks.all()) { const href = await link.getAttribute('href'); assert.ok(href.startsWith('#barrio-')); assert.equal(await agendaPage.locator(href).count(), 1); }
@@ -100,7 +104,7 @@ try {
   const noScript = await browser.newContext({ javaScriptEnabled: false }); const still = await noScript.newPage();
   await still.route('**/*', route => { if (vercelStub(route)) return; return new URL(route.request().url()).origin === new URL(url).origin ? route.continue() : route.abort(); });
   await still.goto(url); await still.getByRole('heading', { level: 1, name: 'La Oficina de los Últimos Cuentos' }).waitFor(); await still.getByText('Leemos todo lo que llega.').waitFor(); await still.locator('.local', { hasText: 'Towandas Café' }).waitFor(); await still.locator('svg.mapa image').first().waitFor({ state: 'attached' }); assert.equal(await still.locator('form.subscription-form[method="post"]').getAttribute('novalidate'), null);
-  await still.goto(agendaUrl); await still.getByRole('heading', { level: 1, name: 'Agenda' }).waitFor(); assert.equal(await still.locator('section.agenda-barrio').count(), groupCount); await still.locator('.agenda-mapa a').first().waitFor({ state: 'attached' }); await noScript.close();
+  await still.goto(agendaUrl); await still.getByRole('heading', { level: 1, name: 'Agenda' }).waitFor(); assert.equal(await still.locator('section.agenda-barrio').count(), groupCount); await still.locator('.agenda-mapa a').first().waitFor({ state: 'attached' }); assert.ok(await still.locator('#microfonos .agenda-item').count() >= 1); await noScript.close();
   await mkdir('validation/previews', { recursive: true });
   for (const width of [320, 375, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });

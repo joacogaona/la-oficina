@@ -15,6 +15,8 @@ export type Actividad = {
   direccion?: string;
   /** Spelled as in the city's barrios so the map can shade it. */
   barrio: string;
+  /** An open mic or a slam: anyone can get up and read their own work. Listed first on the page. */
+  microfono?: boolean;
   /** Who gives a class, when they publish it. */
   quien?: string;
   /** Public page or account, opened only when the reader asks. */
@@ -28,19 +30,6 @@ export const agenda = {
   revisado: "2026-10-30",
   actividades: [
     {
-      "id": "punto-y-aparte-punto-y-aparte-espacio-literario",
-      "clase": "taller",
-      "nombre": "Punto y Aparte",
-      "tipo": "Curso",
-      "cuando": "Próximo curso en abril de 2027; taller abierto dos miércoles por mes",
-      "entrada": "Pago",
-      "lugar": "Punto y Aparte, espacio literario",
-      "barrio": "Almagro",
-      "quien": "Gonzalo Agustín Pérez",
-      "enlace": "https://tallerpuntoyaparte.com.ar",
-      "fechas": []
-    },
-    {
       "id": "el-circuito-panda-rojo-espacio-cultural",
       "clase": "ciclo",
       "nombre": "El Circuito",
@@ -50,6 +39,7 @@ export const agenda = {
       "lugar": "Panda Rojo Espacio Cultural",
       "direccion": "Sarmiento 3096",
       "barrio": "Balvanera",
+      "microfono": true,
       "enlace": "https://www.instagram.com/elcircuitoabierto/",
       "fechas": [
         {
@@ -80,6 +70,7 @@ export const agenda = {
       "lugar": "Panda Rojo Espacio Cultural",
       "direccion": "Sarmiento 3096",
       "barrio": "Balvanera",
+      "microfono": true,
       "enlace": "https://www.instagram.com/slam.capital/",
       "fechas": []
     },
@@ -97,57 +88,6 @@ export const agenda = {
       "fechas": [
         {
           "dia": "2026-11-19",
-          "hora": "18:00"
-        }
-      ]
-    },
-    {
-      "id": "lo-importante-es-el-sentir-mandolina-libros",
-      "clase": "taller",
-      "nombre": "Lo importante es el sentir",
-      "tipo": "Taller de poesía",
-      "cuando": "Lunes a las 18, por mes",
-      "entrada": "Pago",
-      "lugar": "Mandolina Libros",
-      "direccion": "Manuel Ugarte 2439",
-      "barrio": "Belgrano",
-      "quien": "Imanol Guerschman y Camila Mermet",
-      "enlace": "https://www.instagram.com/mandolinabsas/",
-      "fechas": []
-    },
-    {
-      "id": "un-respiro-posible-mandolina-libros",
-      "clase": "taller",
-      "nombre": "Un respiro posible",
-      "tipo": "Taller de poesía",
-      "cuando": "Martes a las 11 o jueves a las 18, por mes",
-      "entrada": "Pago",
-      "lugar": "Mandolina Libros",
-      "direccion": "Manuel Ugarte 2439",
-      "barrio": "Belgrano",
-      "quien": "Gustavo Yuste",
-      "enlace": "https://www.instagram.com/mandolinabsas/",
-      "fechas": []
-    },
-    {
-      "id": "cuatro-barrios-cuatro-maneras-de-contar-la-ciudad-centro-cultural-nicolas-olivari",
-      "clase": "taller",
-      "nombre": "Cuatro barrios, cuatro maneras de contar la Ciudad",
-      "tipo": "Seminario",
-      "cuando": "Viernes a las 18, un encuentro por barrio",
-      "entrada": "Gratis",
-      "lugar": "Centro Cultural Nicolás Olivari",
-      "direccion": "Castro 954",
-      "barrio": "Boedo",
-      "quien": "Pablo Eduardo Rojas",
-      "enlace": "https://linda.buenosaires.gob.ar/agenda?search=Cuatro%20barrios",
-      "fechas": [
-        {
-          "dia": "2026-11-27",
-          "hora": "18:00"
-        },
-        {
-          "dia": "2026-12-11",
           "hora": "18:00"
         }
       ]
@@ -175,21 +115,8 @@ export const agenda = {
       "lugar": "Atlántica Libros y Café",
       "direccion": "Av. Directorio 115",
       "barrio": "Caballito",
+      "microfono": true,
       "enlace": "https://www.instagram.com/unsapointuitivo/",
-      "fechas": []
-    },
-    {
-      "id": "encuentros-literarios-de-faro-azul-libreria-faro-azul",
-      "clase": "taller",
-      "nombre": "Encuentros literarios de Faro Azul",
-      "tipo": "Club de lectura",
-      "cuando": "Varias fechas por mes, en su Instagram",
-      "entrada": "Gratis, con cupo",
-      "lugar": "Librería Faro Azul",
-      "direccion": "Rosario 486",
-      "barrio": "Caballito",
-      "quien": "Maribé Ruscica",
-      "enlace": "https://www.instagram.com/faroazullibros/",
       "fechas": []
     },
     {
@@ -209,77 +136,6 @@ export const agenda = {
           "hora": "18:30"
         }
       ]
-    },
-    {
-      "id": "club-de-lectura-de-esmeralda-libros-taller-colectivo",
-      "clase": "taller",
-      "nombre": "Club de lectura de Esmeralda Libros",
-      "tipo": "Club de lectura",
-      "cuando": "Un sábado por mes, a las 15",
-      "entrada": "Pago",
-      "lugar": "Taller Colectivo",
-      "direccion": "Delgado 828",
-      "barrio": "Colegiales",
-      "enlace": "https://www.instagram.com/esmeraldalibros.clubdelectura/",
-      "fechas": []
-    },
-    {
-      "id": "leer-a-las-vecinas-el-gran-pez-libros",
-      "clase": "taller",
-      "nombre": "Leer a las vecinas",
-      "tipo": "Taller de lectura",
-      "cuando": "Un miércoles por mes, a las 17:30",
-      "entrada": "Pago",
-      "lugar": "El Gran Pez Libros",
-      "direccion": "Santiago del Estero 2052",
-      "barrio": "Constitución",
-      "enlace": "https://www.instagram.com/elgranpezlibros/",
-      "fechas": [
-        {
-          "dia": "2026-11-25",
-          "hora": "17:30"
-        }
-      ]
-    },
-    {
-      "id": "taller-de-escritura-creativa-para-adultos-museo-barrio-de-flores",
-      "clase": "taller",
-      "nombre": "Taller de escritura creativa para adultos",
-      "tipo": "Taller de escritura",
-      "cuando": "Miércoles a la mañana o viernes a la tarde, todo el año",
-      "entrada": "Pago",
-      "lugar": "Museo Barrio de Flores",
-      "direccion": "Ramón Falcón 2207",
-      "barrio": "Flores",
-      "quien": "Roby D'Anna",
-      "enlace": "https://museobarriodeflores.com.ar",
-      "fechas": []
-    },
-    {
-      "id": "club-de-lectura-por-que-leer-libros-del-arrabal",
-      "clase": "taller",
-      "nombre": "Club de lectura Por Qué Leer",
-      "tipo": "Club de lectura",
-      "cuando": "Miércoles a las 19:30, un encuentro por libro",
-      "entrada": "Pago",
-      "lugar": "Libros del Arrabal",
-      "direccion": "Av. Larrazábal 248",
-      "barrio": "Liniers",
-      "enlace": "https://www.instagram.com/librosdelarrabal/",
-      "fechas": []
-    },
-    {
-      "id": "toke-de-libros-casa-cultural-miralla",
-      "clase": "taller",
-      "nombre": "Toke de libros",
-      "tipo": "Club de lectura",
-      "cuando": "Jueves a las 19:15, un libro por vez",
-      "entrada": "Pago",
-      "lugar": "Casa Cultural Miralla",
-      "direccion": "Miralla 401",
-      "barrio": "Liniers",
-      "enlace": "https://www.instagram.com/tokedelibros/",
-      "fechas": []
     },
     {
       "id": "leer-y-escribir-la-vida-casa-de-la-cultura",
@@ -433,38 +289,6 @@ export const agenda = {
       ]
     },
     {
-      "id": "club-de-lectura-de-la-odisea-micro-sede-de-ficu",
-      "clase": "taller",
-      "nombre": "Club de lectura de la Odisea",
-      "tipo": "Club de lectura",
-      "cuando": "Miércoles a las 19, hasta el 2 de diciembre",
-      "entrada": "Pago, se puede entrar empezado",
-      "lugar": "Micro sede de FICU",
-      "barrio": "Palermo",
-      "quien": "Gabriel Payares",
-      "enlace": "https://www.instagram.com/somosficu/",
-      "fechas": []
-    },
-    {
-      "id": "formas-de-ensayar-eterna-cadencia",
-      "clase": "taller",
-      "nombre": "Formas de ensayar",
-      "tipo": "Taller de no ficción",
-      "cuando": "Encuentros sueltos, a las 18:30",
-      "entrada": "Con inscripción",
-      "lugar": "Eterna Cadencia",
-      "direccion": "Honduras 5582",
-      "barrio": "Palermo",
-      "quien": "Margarita García Robayo",
-      "enlace": "https://www.eventbrite.com.ar/cc/laboratorio-de-escrituras-filba-3182459",
-      "fechas": [
-        {
-          "dia": "2026-12-03",
-          "hora": "18:30"
-        }
-      ]
-    },
-    {
       "id": "nuestra-ternura-urban-station-palermo-hollywood",
       "clase": "taller",
       "nombre": "Nuestra Ternura",
@@ -476,25 +300,6 @@ export const agenda = {
       "barrio": "Palermo",
       "enlace": "https://www.instagram.com/nuestraternura/",
       "fechas": []
-    },
-    {
-      "id": "seminarios-de-malba-literatura-malba-biblioteca",
-      "clase": "taller",
-      "nombre": "Seminarios de Malba Literatura",
-      "tipo": "Seminario",
-      "cuando": "Viernes a las 18, un encuentro por seminario",
-      "entrada": "Pago",
-      "lugar": "Malba (Biblioteca)",
-      "direccion": "Av. Figueroa Alcorta 3415",
-      "barrio": "Palermo",
-      "quien": "Cecilia Szperling",
-      "enlace": "https://malba.org.ar/literatura/",
-      "fechas": [
-        {
-          "dia": "2026-11-13",
-          "hora": "18:00"
-        }
-      ]
     },
     {
       "id": "coliseo-de-poesia-biblioteca-nacional-mariano-moreno-auditorio-jorge-luis-borges",
@@ -513,102 +318,6 @@ export const agenda = {
           "hora": "19:00"
         }
       ]
-    },
-    {
-      "id": "senuelo-literario-fundacion-medife",
-      "clase": "taller",
-      "nombre": "Señuelo literario",
-      "tipo": "Club de lectura",
-      "cuando": "Encuentros sueltos, un libro por vez",
-      "entrada": "Pago",
-      "lugar": "Fundación Medifé",
-      "direccion": "Ayacucho 1945",
-      "barrio": "Recoleta",
-      "enlace": "https://www.instagram.com/senueloliterario/",
-      "fechas": [
-        {
-          "dia": "2026-11-05",
-          "hora": "17:00"
-        }
-      ]
-    },
-    {
-      "id": "imagenes-y-palabras-palacio-libertad-la-cupula",
-      "clase": "taller",
-      "nombre": "Imágenes y palabras",
-      "tipo": "Taller de escritura",
-      "cuando": "Jueves a las 18, encuentros sueltos",
-      "entrada": "Con inscripción",
-      "lugar": "Palacio Libertad, La Cúpula",
-      "direccion": "Sarmiento 151",
-      "barrio": "San Nicolás",
-      "quien": "Inés Ulanovsky",
-      "enlace": "https://palaciolibertad.gob.ar/literatura/",
-      "fechas": [
-        {
-          "dia": "2026-11-26",
-          "hora": "18:00"
-        },
-        {
-          "dia": "2026-12-03",
-          "hora": "18:00"
-        }
-      ]
-    },
-    {
-      "id": "cartografia-poetica-la-libre",
-      "clase": "taller",
-      "nombre": "Cartografía poética",
-      "tipo": "Taller de poesía",
-      "cuando": "Sábados a las 15",
-      "entrada": "Pago por mes",
-      "lugar": "La Libre",
-      "direccion": "Chacabuco 917",
-      "barrio": "San Telmo",
-      "quien": "María Florencia Méndez y Federico Frías",
-      "enlace": "https://lalibre.com.ar",
-      "fechas": []
-    },
-    {
-      "id": "geologias-mandragora-libros-y-cultura",
-      "clase": "taller",
-      "nombre": "Geologías",
-      "tipo": "Taller de escritura",
-      "cuando": "Jueves por medio a las 18, desde el 18 de febrero",
-      "entrada": "Pago",
-      "lugar": "Mandrágora Libros y Cultura",
-      "direccion": "Vera 1096",
-      "barrio": "Villa Crespo",
-      "quien": "Bárbara Alí",
-      "enlace": "https://www.instagram.com/mandragora.librosycultura/",
-      "fechas": [
-        {
-          "dia": "2027-02-18",
-          "hora": "18:00"
-        },
-        {
-          "dia": "2027-03-04",
-          "hora": "18:00"
-        },
-        {
-          "dia": "2027-03-18",
-          "hora": "18:00"
-        }
-      ]
-    },
-    {
-      "id": "cosas-que-pasan-medio-pan-y-un-libro-cafe",
-      "clase": "taller",
-      "nombre": "Cosas que pasan",
-      "tipo": "Taller de narrativa",
-      "cuando": "Jueves a las 18:30, hasta el 19 de noviembre",
-      "entrada": "Pago, se puede entrar empezado",
-      "lugar": "Medio Pan y un Libro (café)",
-      "direccion": "Virrey Avilés 3686",
-      "barrio": "Villa Ortúzar",
-      "quien": "Edu Savino",
-      "enlace": "https://agendaleh.ar/organiza/medio-pan-y-un-libro/",
-      "fechas": []
     }
   ] as Actividad[],
 };

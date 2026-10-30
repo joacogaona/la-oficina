@@ -55,7 +55,7 @@ const events = agenda.actividades.flatMap(actividad => actividad.fechas.filter(f
   ...(actividad.enlace ? { url: actividad.enlace } : {}),
   ...(actividad.entrada && /^gratis|^entrada libre/i.test(actividad.entrada) ? { isAccessibleForFree: true } : {}),
 })));
-await prerender("dist/agenda/index.html", renderAgenda(), ({ canonical }) => ({ "@context": "https://schema.org", "@graph": [{ "@type": "WebPage", url: canonical, name: "Agenda de escritura en Buenos Aires", isPartOf: { "@type": "WebSite", name: site.name, url: new URL("/", canonical).href } }, ...events] }));
+await prerender("dist/agenda/index.html", renderAgenda(), ({ canonical }) => ({ "@context": "https://schema.org", "@graph": [{ "@type": "WebPage", url: canonical, name: "Agenda de lecturas y micrófonos abiertos en Buenos Aires", isPartOf: { "@type": "WebSite", name: site.name, url: new URL("/", canonical).href } }, ...events] }));
 
 await rm(ssrDir, { recursive: true, force: true });
 console.log(`Pre-render listo: dist/index.html y dist/agenda/index.html traen la página completa y los datos estructurados (${events.length} fechas en la agenda).`);

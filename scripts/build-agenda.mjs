@@ -1,7 +1,9 @@
 // Builds src/content/agenda.ts from the agenda research in ../agenda/data (the LODLUC workspace, outside this repo).
 // Only rows with decision "sí" reach the site, and only their public fields: no notes, no organisers' contacts beyond the public link,
 // no amounts (entry is "Gratis", "Pago", "A la gorra"...) and no street address for classes given at home. Only what is open now reaches the site:
-// a row whose enrollment is closed is "cerrado" in the data and stays out until it reopens. Run it by hand after curating:
+// a row whose enrollment is closed is "cerrado" in the data and stays out until it reopens.
+// Since the night of 30-oct-2026 (Joaquín) the site lists ciclos.csv only: readings, open mics, talks, clubs, the things you go to tonight.
+// talleres.csv stays curated in the data as a reserve; AGENDA_TALLERES=1 puts the classes back. Run it by hand after curating:
 //   node scripts/build-agenda.mjs
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -79,6 +81,7 @@ function add(row, clase, tipo, extra = {}) {
     ...(row.lugar ? { lugar: row.lugar } : {}),
     ...(row.direccion ? { direccion: row.direccion } : {}),
     barrio,
+    ...(row.microfono === "sí" ? { microfono: true } : {}),
     ...extra,
     fechas: fechas(row.fechas, row.nombre),
   };
@@ -93,7 +96,7 @@ for (const row of read("ciclos.csv")) {
   if (row.decision === "sí" && !tipo) throw new Error(`Tipo sin etiqueta pública: ${row.tipo}`);
   add(row, row.tipo === "escritura en vivo" ? "taller" : "ciclo", tipo, { enlace: link(row.enlace || row.fuente) });
 }
-for (const row of read("talleres.csv")) {
+if (process.env.AGENDA_TALLERES === "1") for (const row of read("talleres.csv")) {
   add(row, "taller", tallerTipo(row.tipo, row.disciplina), {
     ...(row.quien_da ? { quien: row.quien_da } : {}),
     enlace: link(row.enlace || row.contacto_publico || row.fuente),
@@ -120,6 +123,8 @@ export type Actividad = {
   direccion?: string;
   /** Spelled as in the city's barrios so the map can shade it. */
   barrio: string;
+  /** An open mic or a slam: anyone can get up and read their own work. Listed first on the page. */
+  microfono?: boolean;
   /** Who gives a class, when they publish it. */
   quien?: string;
   /** Public page or account, opened only when the reader asks. */
@@ -134,4 +139,4 @@ export const agenda = {
   actividades: ${JSON.stringify(actividades, null, 2).replace(/\n/g, "\n  ")} as Actividad[],
 };
 `);
-console.log(`agenda.ts: ${actividades.length} actividades (${actividades.filter(a => a.clase === "taller").length} talleres), ${new Set(actividades.map(a => plain(a.barrio))).size} barrios, revisado ${revisado}.`);
+console.log(`agenda.ts: ${actividades.length} actividades (${actividades.filter(a => a.microfono).length} micrófonos abiertos, ${actividades.filter(a => a.clase === "taller").length} talleres), ${new Set(actividades.map(a => plain(a.barrio))).size} barrios, revisado ${revisado}.`);
