@@ -30,7 +30,7 @@ export const site = {
   ] as Local[],
   /** The monthly subscription: price as shown (decisiones, fila Suscripción) and the Mercado Pago subscription link Joaquín generates; empty link: the page says payment is arranged by mail. */
   suscripcion: {
-    precioMensual: "$20.000",
+    precioMensual: "$15.000",
     url: (import.meta.env.VITE_SUBSCRIPTION_URL ?? "").trim(),
   },
   /** Where the monthly subscription form posts JSON: Formspree (the Oficina's form) or any endpoint that answers JSON. Empty: the section offers the subscription by letter instead of the form. */

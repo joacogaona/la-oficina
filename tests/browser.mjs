@@ -26,7 +26,7 @@ try {
   if (postal.length) { for (const line of postal) await page.locator('address.postal', { hasText: line }).waitFor(); }
   else await page.locator('.postal-pending', { hasText: 'Todavía no tenemos casilla de correo' }).waitFor();
   assert.equal(await page.locator('a[href^="mailto:"]').count(), 0);
-  assert.equal(await page.getByText(/Cuento Nº|Archivo/).count(), 0); await page.getByText('$20.000 por mes, envío incluido.').waitFor();
+  assert.equal(await page.getByText(/Cuento Nº|Archivo/).count(), 0); await page.getByText('$15.000 por mes, envío incluido.').waitFor();
   // The shops that sell the cuentos, as listed in site.locales; a name and a neighbourhood each, no prices.
   await page.locator('.local', { hasText: 'Towandas Café' }).waitFor(); await page.locator('.local', { hasText: 'Quesada 4982' }).waitFor();
   await page.locator('.local', { hasText: 'Cero Café de Origen' }).waitFor(); await page.locator('.local', { hasText: 'Av. Congreso 5080' }).waitFor();
