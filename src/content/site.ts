@@ -27,6 +27,7 @@ export const site = {
   locales: [
     { nombre: "Towandas Café", barrio: "Villa Urquiza", ciudad: "Buenos Aires", direccion: "Quesada 4982", lat: -34.5675666, lon: -58.4883118, mapa: "https://maps.google.com/?cid=9051435198881607600" },
     { nombre: "Cero Café de Origen", barrio: "Villa Urquiza", ciudad: "Buenos Aires", direccion: "Av. Congreso 5080", lat: -34.5697631, lon: -58.4899585, mapa: "https://maps.google.com/?cid=7839819865668560653" },
+    { nombre: "Terracota", barrio: "Villa Urquiza", ciudad: "Buenos Aires", direccion: "Pacheco 3176", lat: -34.5667354, lon: -58.4893912, mapa: "https://maps.google.com/?cid=15691269739881840877" },
   ] as Local[],
   /** The monthly subscription: price as shown (decisiones, fila Suscripción) and the Mercado Pago subscription link Joaquín generates; empty link: the page says payment is arranged by mail. */
   suscripcion: {

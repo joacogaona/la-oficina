@@ -30,9 +30,10 @@ try {
   // The shops that sell the cuentos, as listed in site.locales; a name and a neighbourhood each, no prices.
   await page.locator('.local', { hasText: 'Towandas Café' }).waitFor(); await page.locator('.local', { hasText: 'Quesada 4982' }).waitFor();
   await page.locator('.local', { hasText: 'Cero Café de Origen' }).waitFor(); await page.locator('.local', { hasText: 'Av. Congreso 5080' }).waitFor();
+  await page.locator('.local', { hasText: 'Terracota' }).waitFor(); await page.locator('.local', { hasText: 'Pacheco 3176' }).waitFor();
   // The map is drawn from the city's own data: one shaded barrio and one owl per local, the directions link opens Google Maps only on request.
   const map = page.locator('svg.mapa'); await map.waitFor();
-  // A dot per local; the two locals are three blocks apart in the same barrio, so they share one owl and one shaded barrio.
+  // A dot per local; the three locals are a few blocks apart in the same barrio, so they share one owl and one shaded barrio.
   assert.equal(await map.locator('.mapa-punto').count(), await page.locator('.local').count()); assert.equal(await map.locator('image').count(), 1); assert.equal(await map.locator('.mapa-barrio--local').count(), 1);
   assert.ok(await page.locator('img.local-lechuza').first().evaluate(img => img.complete && img.naturalWidth > 0));
   const directions = page.locator('a.local-link').first(); assert.equal(await directions.getAttribute('target'), '_blank'); assert.ok((await directions.getAttribute('href')).startsWith('https://maps.google.com/'));
